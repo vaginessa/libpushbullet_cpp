@@ -204,7 +204,10 @@ short PushBullet::list_devices(void) {
 
     #ifdef _DEBUG_
     std::cout << "Response CURL: " << std::endl << result << std::endl;
+    // std::cout << "Accounts: " << d["devices"].GetString() << std::endl;
     #endif
+
+
 
     return 0;
 }

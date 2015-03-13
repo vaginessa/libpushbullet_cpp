@@ -20,6 +20,7 @@ LDFLAGS += -lcurl -ljsoncpp
 SRC     = $(shell find $(DIR_SRC) -name '*.cpp')
 OBJ     = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
 HDR     += $(foreach var,$(shell find . -name '*.hpp' -exec dirname {} \; | uniq),-I$(var))
+HDR     += $(foreach var,$(shell find . -name '*.h' -exec dirname {} \; | uniq),-I$(var))
 DEP     = $(shell find . -name '*.d')
 
 

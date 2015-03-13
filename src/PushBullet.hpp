@@ -14,6 +14,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
+#include <json/json.h>
 
 /**
  * @def API_URL
