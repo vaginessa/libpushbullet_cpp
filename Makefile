@@ -9,7 +9,7 @@ $(shell mkdir -p ./obj)
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0
-LDFLAGS += -lpthread
+LDFLAGS += -lcurl
 
 
 DIR_OBJ = ./obj
