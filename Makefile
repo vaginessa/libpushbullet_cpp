@@ -4,26 +4,35 @@ LD       = clang++
 EXEC     = pushbullet
 
 
-$(shell mkdir -p ./dep)
-$(shell mkdir -p ./obj)
+DIR_SRC = ./src
+DIR_OBJ = ./obj
+DIR_DEP = ./dep
+
+
+$(shell mkdir -p $(DIR_DEP))
+$(shell mkdir -p $(DIR_OBJ))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0
-LDFLAGS += -lcurl
+LDFLAGS += -lcurl -ljson
 
 
-DIR_OBJ = ./obj
-DIR_DEP = ./dep
-DIR_SRC = ./src
-
-
-SRC     = $(shell find . -name '*.cpp')
+SRC     = $(shell find $(DIR_SRC) -name '*.cpp')
 OBJ     = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
 HDR     += $(foreach var,$(shell find . -name '*.hpp' -exec dirname {} \; | uniq),-I$(var))
 DEP     = $(shell find . -name '*.d')
 
 
 OPTIM   ?= DEBUG
+ifeq ($(OPTIM),SIZE)
+	CFLAGS   += -Os
+else ifeq ($(OPTIM),SPEED)
+	CFLAGS   += -Ofast
+else ifeq ($(OPTIM),DEBUG)
+	CFLAGS   += -g3 -O0 -D_DEBUG_
+else ifeq ($(OPTIM),NONE)
+	CFLAGS   +=
+endif
 
 
 # Verbosity
@@ -67,6 +76,7 @@ clean:
 distclean: clean
 	$(VERBOSE) find . -type f -name '*.d' -delete
 	$(VERBOSE) rm -rf $(EXEC)
+	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
 
 
 mrproper: distclean
