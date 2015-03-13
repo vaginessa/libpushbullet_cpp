@@ -14,7 +14,7 @@ $(shell mkdir -p $(DIR_OBJ))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0
-LDFLAGS += -lcurl -ljson
+LDFLAGS += -lcurl -ljsoncpp
 
 
 SRC     = $(shell find $(DIR_SRC) -name '*.cpp')
