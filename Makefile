@@ -7,10 +7,11 @@ EXEC     = pushbullet
 DIR_SRC = ./src
 DIR_OBJ = ./obj
 DIR_DEP = ./dep
-
+DIR_DOC = ./doxygen
 
 $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
+$(shell mkdir -p $(DIR_DOC))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0
@@ -19,9 +20,11 @@ LDFLAGS += -lcurl -ljsoncpp
 
 SRC     = $(shell find $(DIR_SRC) -name '*.cpp')
 OBJ     = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
-HDR     += $(foreach var,$(shell find . -name '*.hpp' -exec dirname {} \; | uniq),-I$(var))
-HDR     += $(foreach var,$(shell find . -name '*.h' -exec dirname {} \; | uniq),-I$(var))
+HDR     += $(shell find . -name '*.hpp' -exec dirname {} \;)
+HDR     += $(shell find . -name '*.h' -exec dirname {} \;)
 DEP     = $(shell find . -name '*.d')
+
+INCLUDE_DIR = $(foreach var,$(shell echo $(HDR) | uniq),-I$(var))
 
 
 OPTIM   ?= DEBUG
@@ -70,9 +73,9 @@ $(EXEC): $(OBJ)
 # Create every objects files in the same directory of the sources
 # Create the dependency files in dep/%i
 $(DIR_OBJ)/%.o: %.cpp
-	$(VERBOSE) $(CC) $<  $(CFLAGS) $(HDR) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
+	$(VERBOSE) $(CC) $<  $(CFLAGS) $(INCLUDE_DIR) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
 	$(VERBOSE) echo   [CC] [$(OPTIM)]  $<
-	$(VERBOSE) $(CC) -c -o $@ $< $(CFLAGS)
+	$(VERBOSE) $(CC) -c -o $@ $< $(CFLAGS) $(INCLUDE_DIR)
 
 
 # clean : clean all objects files
@@ -83,6 +86,7 @@ clean:
 # distclean : clean all objects files and the executable
 distclean: clean
 	$(VERBOSE) find . -type f -name '*.d' -delete
+	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
 	$(VERBOSE) rm -rf $(EXEC)
 	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
 
@@ -94,6 +98,15 @@ mrproper: distclean
 l: launch
 launch: all
 	$(VERBOSE) ./$(EXEC)
+
+
+d: doxygen
+doxygen: $(SRC) $(HDR)
+	$(VERBOSE) doxygen
+
+
+doxywizard: $(SRC) $(HDR)
+	$(VERBOSE) doxywizard Doxyfile
 
 
 # TODO: Implement the tests
