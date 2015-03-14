@@ -31,10 +31,31 @@ std::string PushBullet::get_token_key(void) const {
 }
 
 
+
+std::string PushBullet::get_user_name(void) const {
+    return this->_name;
+}
+
+
+
+std::string PushBullet::get_user_email(void) const {
+    return this->_email;
+}
+
+
+
+std::string PushBullet::get_user_url_photo(void) const {
+    return this->_url_photo;
+}
+
+
+
 #ifdef _DEBUG_
 void PushBullet::display_token_key(void) const {
     std::cout << "Token Key : " << this->get_token_key() << std::endl;
 }
+
+
 
 void PushBullet::display_devices(void) {
     std::cout << "Device: " << std::endl;
@@ -48,6 +69,16 @@ void PushBullet::display_devices(void) {
         std::cout << "- " << it->first << " : " << it->second << '\n';
     }
     #endif
+}
+
+
+
+void PushBullet::display_user_informations(void) const {
+    std::cout << "User informations:" << std::endl
+              << "Name:      " << this->get_user_name() << std::endl
+              << "API token: " << this->get_token_key() << std::endl
+              << "Email:     " << this->get_user_email() << std::endl
+              << "URL photo: " << this->get_user_url_photo() << std::endl;
 }
 #endif
 
@@ -127,7 +158,6 @@ short PushBullet::get_request(std::string url_request, std::string *result) {
         curl_slist *http_headers = NULL;
 
         http_headers = curl_slist_append(http_headers, "Content-Type: application/json");
-
 
         /*  Specify URL to get
          *  Specify the user using the token key
@@ -269,6 +299,42 @@ short PushBullet::link(const std::string title, const std::string body, const st
 }
 
 
+
+short PushBullet::get_user_informations(void) {
+    std::string result;
+    std::stringstream conversion;
+    Json::Value json;               // will contain the root value after parsing.
+
+    if (this->get_request(API_URL_ME, &result) != 0){
+        return -1;
+    }
+
+    /* Convert the string 'result' to be understand by the Json parser
+    */
+    conversion << result;
+    conversion >> json;
+
+    #ifdef _DEBUG_
+    std::cout << "Json Document: " << std::endl << json   << std::endl;
+    #endif
+
+    /* Get the identification of the device corresponding to all of them
+    */
+    this->_devices.insert(std::pair<std::string, std::string>("All devices", json.get("iden", "null").asString()));
+
+    /* Get email of the user
+     * Get name of the user
+     * Get the url of his profile picture
+     *
+     */
+    this->_email     = json.get("email",     "null").asString();
+    this->_name      = json.get("name",      "null").asString();
+    this->_url_photo = json.get("image_url", "null").asString();
+
+    return 0;
+}
+
+
 short PushBullet::get_all_devices(void) {
     std::string result;
     std::stringstream conversion;
@@ -284,7 +350,6 @@ short PushBullet::get_all_devices(void) {
     conversion >> json;
 
     #ifdef _DEBUG_
-    std::cout << "Response CURL: " << std::endl << result << std::endl;
     std::cout << "Json Document: " << std::endl << json   << std::endl;
     #endif
 

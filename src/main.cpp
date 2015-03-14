@@ -12,6 +12,7 @@ int main(void) {
 
     PushBullet pb = PushBullet(APIKEY);
     pb.get_all_devices();
+    pb.get_user_informations();
 
     // std::string example = "{\"type\": \"note\", \"title\": \"Note Title\", \"body\": \"Note Body\"}";
     // pb.pushing(example);
@@ -28,6 +29,9 @@ int main(void) {
 
 
     pb.display_devices();
+    pb.display_user_informations();
 
-    return 0;
+    // pb.create_device("toto");
+
+    return EXIT_SUCCESS;
 }

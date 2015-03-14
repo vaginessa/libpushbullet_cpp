@@ -68,6 +68,21 @@ private:
     std::string _tokenKey;
 
     /**
+     * @brief User email
+     */
+    std::string _email;
+
+    /**
+     * @brief User name
+     */
+    std::string _name;
+
+    /**
+     * @brief URL of the profile picture of the user
+     */
+    std::string _url_photo;
+
+    /**
      * @brief List of devices
      * @details This list contains all the devices that the user has connected to its PushBullet Account.
      */
@@ -103,6 +118,15 @@ public:
      */
     std::string get_token_key(void) const;
 
+
+    std::string get_user_name(void) const;
+
+
+    std::string get_user_email(void) const;
+
+
+    std::string get_user_url_photo(void) const;
+
     #ifdef _DEBUG_
     /**
      * @brief Display the Token key
@@ -114,6 +138,12 @@ public:
      * @brief Display the list of devices
      */
     void display_devices(void);
+
+    /**
+     * @brief Display user informations
+     * @details Display all the user informations that I (Henri BUYSE) think important.
+     */
+    void display_user_informations(void) const;
     #endif
 
     /**
@@ -182,6 +212,14 @@ public:
      * @return Error code
      */
     short link(const std::string title, const std::string body, const std::string url, const std::string iden);
+
+    /**
+     * @brief Get informations about the user
+     * @details Get all informations about the user.
+     *          GET https://api.pushbullet.com/v2/users/me
+     * @return Error code
+     */
+    short get_user_informations(void);
 
     /**
      * @brief Get all the devices
