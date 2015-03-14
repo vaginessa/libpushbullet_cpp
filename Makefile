@@ -13,7 +13,7 @@ $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
 
 
-CFLAGS  += -W -Wall -Wextra -fmessage-length=0
+CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -std=c++11
 LDFLAGS += -lcurl -ljsoncpp
 
 
@@ -57,7 +57,7 @@ $(EXEC): $(OBJ)
 	$(VERBOSE) $(LD) $(OBJ) -o $(EXEC) $(LDFLAGS)
 
 # Include of the makefiles generated in %.o
-# -include $(DEP)
+-include $(DEP)
 
 
 # Create every objects files in the same directory of the sources
@@ -84,6 +84,7 @@ mrproper: distclean
 
 
 # Launch the program
+l: launch
 launch: all
 	$(VERBOSE) ./$(EXEC)
 
