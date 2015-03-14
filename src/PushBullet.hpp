@@ -35,7 +35,7 @@
 /**
  * @brief [brief description]
  * @details [long description]
- * 
+ *
  * @param contents [description]
  * @param size [description]
  * @param nmemb [description]
@@ -51,18 +51,23 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
 /**
  * @brief [brief description]
  * @details [long description]
- * 
+ *
  */
 class PushBullet
 {
 private:
     /**
-     * @brief [brief description]
-     * @details [long description]
+     * @brief User Access Token
+     * @details This Access Token grants full access to the user account.
+     *          Don't share this lightly.
      */
     std::string _tokenKey;
 
-    std::vector<std::string> devices;
+    /**
+     * @brief List of devices
+     * @details This list contains all the devices that the user has connected to its PushBullet Account.
+     */
+    std::map<std::string, std::string> _devices;
 
 public:
 
@@ -92,20 +97,25 @@ public:
      * @details [long description]
      * @return A string containing the Access Token
      */
-    const std::string get_token_key(void);
+    std::string get_token_key(void) const;
 
     #ifdef _DEBUG_
     /**
      * @brief Display the Token key
      * @details Display in the terminal the Token key of the user
      */
-    void display_token_key(void);
+    void display_token_key(void) const;
+
+    /**
+     * @brief Display the list of devices
+     */
+    void display_devices(void);
     #endif
 
     /**
      * @brief [brief description]
      * @details [long description]
-     * 
+     *
      * @param data [description]
      * @return [description]
      */
@@ -114,7 +124,7 @@ public:
     /**
      * @brief [brief description]
      * @details [long description]
-     * 
+     *
      * @param request_url [description]
      * @return [description]
      */
@@ -123,31 +133,34 @@ public:
     /**
      * @brief [brief description]
      * @details [long description]
-     * 
+     *
      * @param title [description]
      * @param body [description]
-     * 
+     *
      * @return [description]
      */
-    short note(std::string title, std::string body);
+    short note(const std::string title, const std::string body);
+    short note(const std::string title, const std::string body, const std::string iden);
 
     /**
-     * @brief [brief description]
+     * @brief Send a link
      * @details [long description]
-     * 
-     * @param title [description]
-     * @param body [description]
-     * @param url [description]
-     * @return [description]
+     *
+     * @param title Title of the URL push
+     * @param body Body of the URL push
+     * @param url The URL given
+     * @return Error code
      */
-    short link(std::string title, std::string body, std::string url);
+    short link(const std::string title, const std::string body, const std::string url);
+    short link(const std::string title, const std::string body, const std::string url, const std::string iden);
 
     /**
-     * @brief [brief description]
-     * @details [long description]
-     * @return [description]
+     * @brief Get all the devices
+     * @details Get all the active devices and stock them in the list devices.
+     *          GET https://api.pushbullet.com/v2/devices
+     * @return Error code
      */
-    short list_devices(void);
+    short get_all_devices(void);
 
 };
 
