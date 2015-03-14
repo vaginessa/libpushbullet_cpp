@@ -17,20 +17,24 @@
 #include <sys/utsname.h>    // int uname(struct utsname *buf);
 
 /**
- * @def API_URL
+ * Basic URL for PushBullet API
  */
 #define API_URL         "https://api.pushbullet.com/v2/"
 
 /**
- * @def API_URL_PUSHES
+ * PushBullet API URL for the pushes
  */
-#define API_URL_PUSHES  "https://api.pushbullet.com/v2/pushes"
+#define API_URL_PUSHES  API_URL "pushes"
 
 /**
- * @def API_URL_DEVICES
+ * PushBullet API URL for the devices
  */
-#define API_URL_DEVICES "https://api.pushbullet.com/v2/devices"
+#define API_URL_DEVICES API_URL "devices"
 
+/**
+ * PushBullet API URL for the user informations
+ */
+#define API_URL_ME      API_URL "users/me"
 
 /**
  * @brief [brief description]
@@ -144,9 +148,13 @@ public:
     short note(const std::string title, const std::string body);
 
     /**
-     * @see PushBullet::note()
+     * @brief Send a note to all devices or a specific device
      *
+     * @param title Title of the note
+     * @param body Body of the note
      * @param iden The identification of the specific device you want to push to.
+     *
+     * @return Error code
      */
     short note(const std::string title, const std::string body, const std::string iden);
 
@@ -163,9 +171,15 @@ public:
     short link(const std::string title, const std::string body, const std::string url);
 
     /**
-     * @see PushBullet::link()
+     * @brief Send a link
+     * @details [long description]
      *
+     * @param title Title of the URL push
+     * @param body Body of the URL push
+     * @param url The URL given
      * @param iden The identification of the specific device you want to push to.
+     *
+     * @return Error code
      */
     short link(const std::string title, const std::string body, const std::string url, const std::string iden);
 
