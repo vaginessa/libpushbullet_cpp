@@ -8,8 +8,6 @@
 #include "PushBullet.hpp"
 
 
-#define JSON_CODE "{\"encoding\" : \"UTF-8\", \"plug-ins\" : [\"python\", \"c++\", \"ruby\"], \"indent\" : {\"length\" : 3, \"use_space\": true }}"
-
 
 PushBullet::PushBullet() {
     this->_tokenKey = "00000000000000000000000000000000";

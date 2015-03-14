@@ -1,7 +1,6 @@
 #include "PushBullet.hpp"
 
 #define APIKEY "YpiQLDdMfEkhAFabFZbNwAq8FVcBVGWn"
-#define EXAMPLE "{\"type\": \"note\", \"title\": \"Note Title\", \"body\": \"Note Body\"}"
 
 using namespace std;
 
