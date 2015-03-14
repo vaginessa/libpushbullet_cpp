@@ -13,7 +13,7 @@ $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
 
 
-CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -std=c++11
+CFLAGS  += -W -Wall -Wextra -fmessage-length=0
 LDFLAGS += -lcurl -ljsoncpp
 
 
@@ -35,6 +35,13 @@ else ifeq ($(OPTIM),NONE)
 	CFLAGS   +=
 endif
 
+
+CPP11  ?= 1
+ifeq ($(CPP11),1)
+	CFLAGS   += -D_CPP11_ -std=c++11
+else ifeq ($(CPP11),0)
+	CFLAGS   +=
+endif
 
 # Verbosity
 V            ?= 0

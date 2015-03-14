@@ -40,12 +40,16 @@ void PushBullet::display_token_key(void) const {
 
 void PushBullet::display_devices(void) {
     std::cout << "Device: " << std::endl;
-    // for (std::map<std::string, std::string>::iterator it=this->_devices.begin(); it!=this->_devices.end(); ++it){
-    //     std::cout << "- " << it->first << " : " << it->second << '\n';
-    // }
+
+    #ifdef _CPP_11_
     for (auto& x: this->_devices) {
         std::cout << "- " << x.first << " : " << x.second << '\n';
     }
+    #else
+    for (std::map<std::string, std::string>::iterator it=this->_devices.begin(); it!=this->_devices.end(); ++it){
+        std::cout << "- " << it->first << " : " << it->second << '\n';
+    }
+    #endif
 }
 #endif
 
@@ -70,6 +74,7 @@ short PushBullet::post_request(std::string url_request, std::string *result, std
 
         /*  Specify URL to get
          *  Specify the user using the token key
+         *  Specify that we are going to post
          *  Specify the data we are about to send
          *  Specify the HTTP header
          *  Send all data to the WriteMemoryCallback method

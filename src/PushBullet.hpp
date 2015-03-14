@@ -8,13 +8,13 @@
  * @brief Header will be the connection to the API PushBullet
  */
 
-#include <iostream>
-#include <curl/curl.h>
-#include <string>
-#include <sstream>
-#include <map>
-#include <vector>
-#include <json/json.h>
+#include <iostream>         // std::cout
+#include <curl/curl.h>      // Whole librairy
+#include <string>           // string
+#include <sstream>          // stringstream
+#include <map>              // map
+#include <json/json.h>      // Json::Value
+#include <sys/utsname.h>    // int uname(struct utsname *buf);
 
 /**
  * @def API_URL
@@ -27,7 +27,7 @@
 #define API_URL_PUSHES  "https://api.pushbullet.com/v2/pushes"
 
 /**
- * @def
+ * @def API_URL_DEVICES
  */
 #define API_URL_DEVICES "https://api.pushbullet.com/v2/devices"
 
@@ -80,7 +80,7 @@ public:
     /**
      * @brief Constructor of class PushBullet.
      * @details This method is a constructor of the class.
-     * Its argument tokenKey allow the developer to access the PushBullet API.
+     *          Its argument tokenKey allow the developer to access the PushBullet API.
      *
      * @param tokenKey Access Token given by the PushBullet website in the rubric "Account Settings"
      */
@@ -94,7 +94,7 @@ public:
 
     /**
      * @brief Getter of the Token key
-     * @details [long description]
+     *
      * @return A string containing the Access Token
      */
     std::string get_token_key(void) const;
@@ -113,33 +113,41 @@ public:
     #endif
 
     /**
-     * @brief [brief description]
-     * @details [long description]
+     * @brief Do a POST request to the specific URL given by request_url
      *
-     * @param data [description]
-     * @return [description]
+     * @param request_url URL which you want to POST
+     * @param result String that contains the result and that can be reused
+     * @param data Data you are going to POST
+     *
+     * @return Error code
      */
     short post_request(std::string request_url, std::string *result, std::string data);
 
     /**
-     * @brief [brief description]
-     * @details [long description]
+     * @brief Do a GET request to the specific URL given by request_url
      *
-     * @param request_url [description]
-     * @return [description]
+     * @param request_url URL which you want to GET
+     * @param result String that contains the result and that can be reused
+     *
+     * @return Error code
      */
     short get_request(std::string request_url, std::string *result);
 
     /**
-     * @brief [brief description]
-     * @details [long description]
+     * @brief Send a note to all devices or a specific device
      *
-     * @param title [description]
-     * @param body [description]
+     * @param title Title of the note
+     * @param body Body of the note
      *
-     * @return [description]
+     * @return Error code
      */
     short note(const std::string title, const std::string body);
+
+    /**
+     * @see PushBullet::note()
+     *
+     * @param iden The identification of the specific device you want to push to.
+     */
     short note(const std::string title, const std::string body, const std::string iden);
 
     /**
@@ -149,9 +157,16 @@ public:
      * @param title Title of the URL push
      * @param body Body of the URL push
      * @param url The URL given
+     *
      * @return Error code
      */
     short link(const std::string title, const std::string body, const std::string url);
+
+    /**
+     * @see PushBullet::link()
+     *
+     * @param iden The identification of the specific device you want to push to.
+     */
     short link(const std::string title, const std::string body, const std::string url, const std::string iden);
 
     /**
