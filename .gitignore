@@ -33,3 +33,5 @@
 # Personal adds
 *.d
 pushbullet
+*~
+doxygen/
