@@ -15,6 +15,15 @@
 #include <map>              // map
 #include <json/json.h>      // Json::Value
 #include <sys/utsname.h>    // int uname(struct utsname *buf);
+#include <algorithm>        // tolower
+#include <fstream>          // ifstream
+
+#ifdef _BOOST_
+#include <boost/regex.hpp>  // boost::regex
+#else
+#include <regex>            // regex
+#endif
+
 
 /**
  * Basic URL for PushBullet API
