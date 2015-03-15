@@ -15,7 +15,7 @@ $(shell mkdir -p $(DIR_DOC))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0
-LDFLAGS += -lcurl -ljsoncpp
+LDFLAGS += -L/usr/local/boost_1_57_0 -lcurl -ljsoncpp
 
 
 SRC     = $(shell find $(DIR_SRC) -name '*.cpp')
@@ -149,4 +149,3 @@ indent:
 	--declaration-comment-column60 \
 	--else-endif-column60 \
 	$(DIR_SRC)/*
-	$(VERBOSE) rm `find . -name *~`
