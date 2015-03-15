@@ -15,7 +15,7 @@ $(shell mkdir -p $(DIR_DOC))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0
-LDFLAGS += -L/usr/local/boost_1_57_0 -lcurl -ljsoncpp
+LDFLAGS += -lcurl -ljsoncpp
 
 
 SRC     = $(shell find $(DIR_SRC) -name '*.cpp')
@@ -26,7 +26,7 @@ DEP     = $(shell find . -name '*.d')
 
 INCLUDE_DIR = $(foreach var,$(shell echo $(HDR) | uniq),-I$(var))
 
-
+# Which optimisation?
 OPTIM   ?= DEBUG
 ifeq ($(OPTIM),SIZE)
 	CFLAGS   += -Os
@@ -39,11 +39,17 @@ else ifeq ($(OPTIM),NONE)
 endif
 
 
+# C++ 11 ?
 CPP11  ?= 1
 ifeq ($(CPP11),1)
 	CFLAGS   += -D_CPP11_ -std=c++11
-else ifeq ($(CPP11),0)
-	CFLAGS   +=
+endif
+
+# BOOST librairies?
+BOOST  ?= 1
+ifeq ($(BOOST),1)
+	CFLAGS   += -D_BOOST_
+	LDFLAGS  += -lboost_regex
 endif
 
 # Verbosity
