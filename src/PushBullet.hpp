@@ -46,6 +46,17 @@
 #define API_URL_ME      API_URL "users/me"
 
 /**
+ * Path to the file /etc/lsb-release
+ */
+#define LSB_RELEASE_PATH "/etc/lsb-release"
+
+/**
+ * Regex to get the name of the Linux distribution running the program
+ */
+#define DISTRIB_DESCRIPTION_PATTERN "DISTRIB_DESCRIPTION=\"(.*)\""
+
+
+/**
  * @brief [brief description]
  * @details [long description]
  *
@@ -136,7 +147,7 @@ public:
 
     std::string get_user_url_photo(void) const;
 
-    #ifdef _DEBUG_
+#ifdef _DEBUG_
     /**
      * @brief Display the Token key
      * @details Display in the terminal the Token key of the user
@@ -153,7 +164,7 @@ public:
      * @details Display all the user informations that I (Henri BUYSE) think important.
      */
     void display_user_informations(void) const;
-    #endif
+#endif
 
     /**
      * @brief Do a POST request to the specific URL given by request_url
@@ -237,6 +248,9 @@ public:
      * @return Error code
      */
     short get_all_devices(void);
+
+
+    short create_device_if_not_existing(void);
 
 };
 

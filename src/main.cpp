@@ -6,13 +6,15 @@ using namespace std;
 
 int main(void) {
 
-    #ifdef _DEBUG_
-    std::cout << "Mode: DEBUG" << std::endl;
-    #endif
+#ifdef _DEBUG_
+    std::cout << "Mode:   DEBUG" << std::endl;
+    std::cout << "APIKEY: " << APIKEY << std::endl;
+#endif
 
-    PushBullet pb = PushBullet(APIKEY);
+    PushBullet      pb = PushBullet(APIKEY);
+
     pb.get_all_devices();
-    pb.get_user_informations();
+    // pb.get_user_informations();
 
     // std::string example = "{\"type\": \"note\", \"title\": \"Note Title\", \"body\": \"Note Body\"}";
     // pb.pushing(example);
@@ -28,10 +30,10 @@ int main(void) {
     // pb.link(title, body, url);
 
 
-    pb.display_devices();
-    pb.display_user_informations();
+    // pb.display_devices();
+    // pb.display_user_informations();
 
-    // pb.create_device("toto");
+    pb.create_device_if_not_existing();
 
     return EXIT_SUCCESS;
 }

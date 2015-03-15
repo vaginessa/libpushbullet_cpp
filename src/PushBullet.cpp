@@ -60,15 +60,15 @@ void PushBullet::display_token_key(void) const {
 void PushBullet::display_devices(void) {
     std::cout << "Device: " << std::endl;
 
-    #ifdef _CPP_11_
+#ifdef _CPP_11_
     for (auto& x: this->_devices) {
         std::cout << "- " << x.first << " : " << x.second << '\n';
     }
-    #else
+#else
     for (std::map<std::string, std::string>::iterator it=this->_devices.begin(); it!=this->_devices.end(); ++it){
         std::cout << "- " << it->first << " : " << it->second << '\n';
     }
-    #endif
+#endif
 }
 
 
@@ -122,9 +122,9 @@ short PushBullet::post_request(std::string url_request, std::string *result, std
         /* Checking errors
         */
         if (r != CURLE_OK) {
-            #ifdef _DEBUG_
+#ifdef _DEBUG_
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(r) << std::endl;
-            #endif
+#endif
             return -2;
         }
 
@@ -134,9 +134,9 @@ short PushBullet::post_request(std::string url_request, std::string *result, std
         return 0;
     }
     else {
-        #ifdef _DEBUG_
+#ifdef _DEBUG_
         std::cerr << "curl_easy_init() could not be initiated." << std::endl;
-        #endif
+#endif
         return -1;
     }
 }
@@ -178,9 +178,9 @@ short PushBullet::get_request(std::string url_request, std::string *result) {
         /* Checking errors
         */
         if (r != CURLE_OK) {
-            #ifdef _DEBUG_
+#ifdef _DEBUG_
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(r) << std::endl;
-            #endif
+#endif
             return -2;
         }
 
@@ -190,9 +190,9 @@ short PushBullet::get_request(std::string url_request, std::string *result) {
         return 0;
     }
     else {
-        #ifdef _DEBUG_
+#ifdef _DEBUG_
         std::cerr << "curl_easy_init() could not be initiated." << std::endl;
-        #endif
+#endif
         return -1;
     }
 }
@@ -210,13 +210,16 @@ short PushBullet::note(const std::string title, const std::string body) {
          << "}";
 
     if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+#ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to send a note" << std::endl;
+#endif
         return -1;
     }
 
-    #ifdef _DEBUG_
+#ifdef _DEBUG_
     std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
     std::cout << "Response CURL: " << std::endl << result << std::endl;
-    #endif
+#endif
 
     return 0;
 
@@ -235,13 +238,16 @@ short PushBullet::note(const std::string title, const std::string body, const st
          << "}";
 
     if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+#ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to send a note" << std::endl;
+#endif
         return -1;
     }
 
-    #ifdef _DEBUG_
+#ifdef _DEBUG_
     std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
     std::cout << "Response CURL: " << std::endl << result << std::endl;
-    #endif
+#endif
 
     return 0;
 
@@ -260,13 +266,16 @@ short PushBullet::link(const std::string title, const std::string body, const st
          << "}";
 
     if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+#ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to send a link" << std::endl;
+#endif
         return -1;
     }
 
-    #ifdef _DEBUG_
+#ifdef _DEBUG_
     std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
     std::cout << "Response CURL: " << std::endl << result << std::endl;
-    #endif
+#endif
 
     return 0;
 
@@ -286,13 +295,16 @@ short PushBullet::link(const std::string title, const std::string body, const st
          << "}";
 
     if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+#ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to send a link" << std::endl;
+#endif
         return -1;
     }
 
-    #ifdef _DEBUG_
+#ifdef _DEBUG_
     std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
     std::cout << "Response CURL: " << std::endl << result << std::endl;
-    #endif
+#endif
 
     return 0;
 
@@ -306,6 +318,9 @@ short PushBullet::get_user_informations(void) {
     Json::Value json;               // will contain the root value after parsing.
 
     if (this->get_request(API_URL_ME, &result) != 0){
+#ifdef _DEBUG_
+        std::cerr << "GET_REQUEST > Impossible to ask for all user informations" << std::endl;
+#endif
         return -1;
     }
 
@@ -314,9 +329,9 @@ short PushBullet::get_user_informations(void) {
     conversion << result;
     conversion >> json;
 
-    #ifdef _DEBUG_
+#ifdef _DEBUG_
     std::cout << "Json Document: " << std::endl << json   << std::endl;
-    #endif
+#endif
 
     /* Get the identification of the device corresponding to all of them
     */
@@ -341,6 +356,9 @@ short PushBullet::get_all_devices(void) {
     Json::Value json;               // will contain the root value after parsing.
 
     if (this->get_request(API_URL_DEVICES, &result) != 0){
+#ifdef _DEBUG_
+        std::cerr << "GET_REQUEST > Impossible to ask for all devices" << std::endl;
+#endif
         return -1;
     }
 
@@ -349,9 +367,9 @@ short PushBullet::get_all_devices(void) {
     conversion << result;
     conversion >> json;
 
-    #ifdef _DEBUG_
+#ifdef _DEBUG_
     std::cout << "Json Document: " << std::endl << json   << std::endl;
-    #endif
+#endif
 
     /* Get the list of devices
     */
@@ -362,9 +380,101 @@ short PushBullet::get_all_devices(void) {
          */
         if (devices[index].get("active", false).asBool()) {
             this->_devices.insert(std::pair<std::string, std::string>(
-                                    devices[index].get("nickname", "null").asString(),
-                                    devices[index].get("iden", "null").asString()));
+                                  devices[index].get("nickname", "null").asString(),
+                                  devices[index].get("iden", "null").asString()));
         }
+    }
+
+
+    return 0;
+}
+
+
+//curl --header 'Authorization: Bearer <your_access_token_here>' -X POST
+//https://api.pushbullet.com/v2/devices -d nickname=stream_device -d type=stream
+short PushBullet::create_device_if_not_existing(void) {
+
+/*
+{
+    "icon" : "desktop",
+    "model" : "Windows 8.1",
+    "nickname" : "BUYSE",
+    "type" : "windows"
+},
+
+ */
+    /* Structure that will contain informations about the computer.
+    */
+    struct utsname buffer;
+
+    std::stringstream data;
+    std::string result;
+
+    /* File that contains informations about the Linux distribution and its distribution.
+    */
+    std::ifstream lsb_release("/etc/lsb-release", std::ifstream::in);
+    std::string line;
+    std::string model, nickname, type;
+
+    /* REGEXS
+    */
+#ifdef _BOOST_
+    boost::regex regex(DISTRIB_DESCRIPTION_PATTERN, boost::regex::extended);
+    boost::match_results<std::string::const_iterator> sm;
+#else
+    std::regex   regex(DISTRIB_DESCRIPTION_PATTERN);
+    std::smatch   sm;
+#endif
+
+
+    /*  Get informations about the computer
+    */
+    if (uname(&buffer) != 0) {
+#ifdef _DEBUG_
+        std::cerr << "UNAME > Impossible to get the informations about the computer!" << std::endl;
+#endif
+        return -1;
+    }
+
+
+    /* Store the strings
+    */
+    nickname = std::string(buffer.nodename);
+    type = std::string(buffer.sysname);
+    std::transform(type.begin(), type.end(), type.begin(), ::tolower); // Convert to lower
+    model = std::string(buffer.sysname) + '-' + std::string(buffer.release);
+
+
+    /* Try to open the file /etc/release to get the model (OS Version)
+     */
+    if (lsb_release.is_open()) {
+        while (getline(lsb_release, line)) {
+#ifdef _BOOST_
+            if (boost::regex_match(line, sm, regex)) {
+                model = sm[1];
+            }
+#else
+            if (std::regex_match(line, sm, regex)) {
+                model = sm[1].str();
+                model.erase(std::remove(model.begin(), model.end(), '\"'), model.end());
+            }
+#endif
+        }
+        lsb_release.close();
+    }
+
+    data << "{"
+         << "\"nickname\" : \"" << nickname << "\", "
+         << "\"model\" : \""    << model    << "\", "
+         << "\"type\" : \""     << type     << "\", "
+         << "\"icon\" : \"desktop\""
+         << "}";
+
+    if (this->post_request(API_URL_DEVICES, &result, data.str()) != 0){
+#ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to create a new device." << std::endl;
+#endif
+        return -1;
     }
 
 
