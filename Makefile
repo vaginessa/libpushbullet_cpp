@@ -31,7 +31,7 @@ INCLUDE_DIR = $(foreach var,$(shell echo $(HDR) | uniq),-I$(var))
 
 
 # Which optimisation?
-OPTIM   ?= DEBUG
+OPTIM   ?= NONE
 ifeq ($(OPTIM),SIZE)
 	CFLAGS   += -Os
 else ifeq ($(OPTIM),SPEED)
