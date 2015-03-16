@@ -13,8 +13,8 @@ int main(void) {
 
     PushBullet      pb = PushBullet(APIKEY);
 
-    pb.get_all_devices();
-    // pb.get_user_informations();
+    // pb.get_all_devices();
+    pb.get_user_informations();
 
     // std::string example = "{\"type\": \"note\", \"title\": \"Note Title\", \"body\": \"Note Body\"}";
     // pb.pushing(example);
@@ -30,15 +30,16 @@ int main(void) {
     // pb.link(title, body, url);
 
 
+    // pb.display_devices();
+    #ifdef _DEBUG_
+    pb.display_user_informations();
     pb.display_devices();
-    // pb.display_user_informations();
+    #endif
+    // pb.create_device_if_not_existing();
 
-    pb.create_device_if_not_existing();
+    // pb.display_devices();
 
-    pb.display_devices();
-
-    pb.delete_device("AO725");
-    pb.display_devices();
+    // pb.delete_device("AO725");
 
     // pb.get_all_devices();
     // pb.display_devices();
