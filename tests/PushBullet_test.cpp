@@ -4,7 +4,7 @@
  *
  * @brief Tests PushBullet's methods
  */
- 
+
 #include "PushBullet.hpp"
 
 #define BOOST_TEST_MODULE "Test the PushBullet class"
@@ -15,6 +15,9 @@
 
 #define USER_NAME_TRUE  "Henri Buyse"
 #define USER_NAME_FALSE "Henri Henri"
+
+ #define USER_EMAIL_TRUE  "henri.buyse@gmail.com"
+ #define USER_EMAIL_FALSE "henri.henri@gmail.com"
 
 
 BOOST_AUTO_TEST_CASE(test_apikey) {
@@ -35,4 +38,16 @@ BOOST_AUTO_TEST_CASE(test_user_name) {
 
     BOOST_CHECK(pb.get_user_name() != USER_NAME_FALSE);
     BOOST_CHECK(pb.get_user_name() == USER_NAME_TRUE);
+}
+
+
+
+BOOST_AUTO_TEST_CASE(test_user_mail) {
+    /* Set up a PushBullet account
+     */
+    PushBullet pb(APIKEY_TRUE);
+    pb.get_user_informations();
+
+    BOOST_CHECK(pb.get_user_email() != USER_EMAIL_FALSE);
+    BOOST_CHECK(pb.get_user_email() == USER_EMAIL_TRUE);
 }
