@@ -35,4 +35,6 @@
 *~
 doxygen/
 pushbullet
+pb
 test_pushbullet
+test_pb

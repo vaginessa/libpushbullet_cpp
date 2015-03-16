@@ -1,7 +1,7 @@
 CC       = clang++
 LD       = clang++
 
-EXEC       = pushbullet
+EXEC       = pb
 LIB_SHARED = libpushbullet.so
 LIB_STATIC = libpushbullet.a
 
@@ -77,7 +77,7 @@ endif
 #Tests
 TEST ?= 0
 ifeq ($(TEST),1)
-	EXEC      = test_pushbullet
+	EXEC      = test_pb
 	DIR_SRC   = ./tests
 	DIR_OBJ   = $(DIR_SRC)
 	LDFLAGS  += -lboost_unit_test_framework
@@ -93,7 +93,7 @@ all: $(EXEC) lib
 
 $(EXEC): $(OBJ)
 	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
-	$(VERBOSE) $(LD) $(OBJ) -o $@ $(LDFLAGS)
+	$(VERBOSE) $(LD) $? -o $@ $(LDFLAGS)
 
 
 lib: $(LIB_SHARED) $(LIB_STATIC)
@@ -107,12 +107,6 @@ $(LIB_SHARED): $(DIR_OBJ)/PushBullet.o
 $(LIB_STATIC): $(DIR_OBJ)/PushBullet.o
 	$(VERBOSE) echo   [AR] [$(OPTIM)]  $@
 	$(VERBOSE) ar rs $@ $< > /dev/null
-
-
-# TODO: Implement the tests
-test: PushBullet.o PushBullet_test.o
-	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
-	$(VERBOSE) $(LD) $? -o $(EXEC) $(LDFLAGS)
 
 
 # Include of the makefiles generated in %.o
@@ -137,7 +131,7 @@ d: distclean
 distclean: clean
 	$(VERBOSE) find . -type f -name '*.d' -delete
 	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
-	$(VERBOSE) rm -f $(EXEC) $(LIB_SHARED) $(LIB_STATIC)
+	$(VERBOSE) rm -f $(EXEC) $(LIB_SHARED) $(LIB_STATIC) test_pb
 	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
 
 
