@@ -10,11 +10,13 @@ DIR_SRC  = ./src
 DIR_OBJ  = ./obj
 DIR_DEP  = ./dep
 DIR_DOC  = ./doxygen
+DIR_LIB  = ./lib
 
 
 $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
 $(shell mkdir -p $(DIR_DOC))
+$(shell mkdir -p $(DIR_LIB))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC
@@ -90,12 +92,12 @@ lib: $(LIB_SHARED) $(LIB_STATIC)
 
 $(LIB_SHARED): $(DIR_OBJ)/PushBullet.o
 	$(VERBOSE) echo   [SO] [$(OPTIM)]  $@
-	$(VERBOSE) $(LD) -shared -o $@ $<  $(LDFLAGS)
+	$(VERBOSE) $(LD) -shared -o $(DIR_LIB)/$@ $<  $(LDFLAGS)
 
 
 $(LIB_STATIC): $(DIR_OBJ)/PushBullet.o
 	$(VERBOSE) echo   [AR] [$(OPTIM)]  $@
-	$(VERBOSE) ar rs $@ $< > /dev/null
+	$(VERBOSE) ar rs $(DIR_LIB)/$@ $< > /dev/null
 
 
 # Include of the makefiles generated in %.o
