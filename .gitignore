@@ -33,8 +33,10 @@
 # Personal adds
 *.d
 *~
-doxygen/
+doxygen/html/
+doxygen/latex/
 pushbullet
 pb
-test_pushbullet
-test_pb
+pushbullet.test
+pb.test
+lib/
