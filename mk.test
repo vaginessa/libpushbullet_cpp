@@ -1,24 +1,22 @@
 CC       = clang++
 LD       = clang++
 
-EXEC       = pb
+EXEC       = pb.test
 LIB_SHARED = libpushbullet.so
 LIB_STATIC = libpushbullet.a
 
 
-DIR_SRC  = ./src
+DIR_SRC  = ./tests
 DIR_OBJ  = ./obj
 DIR_DEP  = ./dep
-DIR_DOC  = ./doxygen
 
 
 $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
-$(shell mkdir -p $(DIR_DOC))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC
-LDFLAGS += -lcurl -ljsoncpp
+LDFLAGS += -lcurl -ljsoncpp -lboost_unit_test_framework
 
 
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp')
@@ -77,25 +75,12 @@ endif
 vpath %.cpp $(DIR_SRC)
 
 
-all: $(EXEC) lib
+all: $(EXEC)
 
 
 $(EXEC): $(OBJ)
 	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
 	$(VERBOSE) $(LD) $? -o $@ $(LDFLAGS)
-
-
-lib: $(LIB_SHARED) $(LIB_STATIC)
-
-
-$(LIB_SHARED): $(DIR_OBJ)/PushBullet.o
-	$(VERBOSE) echo   [SO] [$(OPTIM)]  $@
-	$(VERBOSE) $(LD) -shared -o $@ $<  $(LDFLAGS)
-
-
-$(LIB_STATIC): $(DIR_OBJ)/PushBullet.o
-	$(VERBOSE) echo   [AR] [$(OPTIM)]  $@
-	$(VERBOSE) ar rs $@ $< > /dev/null
 
 
 # Include of the makefiles generated in %.o
@@ -119,8 +104,7 @@ clean:
 d: distclean
 distclean: clean
 	$(VERBOSE) find . -type f -name '*.d' -delete
-	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
-	$(VERBOSE) rm -f $(EXEC) $(LIB_SHARED) $(LIB_STATIC)
+	$(VERBOSE) rm -f $(EXEC)
 	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
 
 
@@ -131,49 +115,3 @@ mrproper: distclean
 l: launch
 launch: all
 	$(VERBOSE) ./$(EXEC)
-
-
-doxygen: $(SRC) $(HDR)
-	$(VERBOSE) doxygen ./doxygen/Doxyfile
-
-
-doxywizard: $(SRC) $(HDR)
-	$(VERBOSE) doxywizard ./doxygen/Doxyfile
-
-
-# Indent the files
-indent:
-	$(VERBOSE) indent \
-	--blank-lines-after-declarations \
-	--blank-lines-after-procedures \
-	--blank-lines-before-block-comments \
-	--no-blank-lines-after-commas \
-	--braces-on-if-line \
-	--braces-on-func-def-line \
-	--braces-on-struct-decl-line \
-	--case-indentation0 \
-	--case-brace-indentation4 \
-	--cuddle-do-while \
-	--declaration-indentation8 \
-	--dont-break-function-decl-args \
-	--dont-break-function-decl-args-end \
-	--dont-break-procedure-type \
-	--dont-format-comments \
-	--format-first-column-comments  \
-	--dont-cuddle-else \
-	--remove-preprocessor-space \
-	--space-after-cast \
-	--space-after-for \
-	--space-after-if \
-	--space-after-parentheses \
-	--no-space-after-function-call-names \
-	--no-space-after-parentheses \
-	--space-after-while \
-	--indent-level4 \
-	--no-tabs \
-	--line-length120 \
-	--start-left-side-of-comments \
-	--comment-indentation60 \
-	--declaration-comment-column60 \
-	--else-endif-column60 \
-	$(DIR_SRC)/*
