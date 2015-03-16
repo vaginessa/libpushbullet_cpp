@@ -6,8 +6,8 @@ LIB_SHARED = libpushbullet.so
 LIB_STATIC = libpushbullet.a
 
 
-DIR_SRC  = ./tests
-DIR_OBJ  = ./obj
+DIR_SRC  = ./tests_src
+DIR_OBJ  = ./tests_obj
 DIR_DEP  = ./dep
 
 
