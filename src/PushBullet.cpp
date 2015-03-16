@@ -130,8 +130,6 @@ short PushBullet::post_request(const std::string url_request, std::string *resul
 
         curl_easy_cleanup(s);
         curl_slist_free_all(http_headers);
-
-        return 0;
     }
     else {
 #ifdef _DEBUG_
@@ -139,6 +137,8 @@ short PushBullet::post_request(const std::string url_request, std::string *resul
 #endif
         return -1;
     }
+
+    return 0;
 }
 
 
@@ -186,8 +186,6 @@ short PushBullet::get_request(const std::string url_request, std::string *result
 
         curl_easy_cleanup(s);
         curl_slist_free_all(http_headers);
-
-        return 0;
     }
     else {
 #ifdef _DEBUG_
@@ -195,6 +193,8 @@ short PushBullet::get_request(const std::string url_request, std::string *result
 #endif
         return -1;
     }
+
+    return 0;
 }
 
 
@@ -241,8 +241,6 @@ short PushBullet::delete_request(const std::string url_request, std::string *res
 
         curl_easy_cleanup(s);
         curl_slist_free_all(http_headers);
-
-        return 0;
     }
     else {
 #ifdef _DEBUG_
@@ -250,6 +248,8 @@ short PushBullet::delete_request(const std::string url_request, std::string *res
 #endif
         return -1;
     }
+
+    return 0;
 }
 
 
@@ -479,7 +479,7 @@ short PushBullet::create_device_if_not_existing(void) {
 #ifdef _DEBUG_
         std::cerr << "UNAME > Impossible to get the informations about the computer!" << std::endl;
 #endif
-        return -1;
+        return -2;
     }
 
 
