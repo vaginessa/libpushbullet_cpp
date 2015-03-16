@@ -122,8 +122,8 @@ d: distclean
 distclean: clean
 	$(VERBOSE) find . -type f -name '*.d' -delete
 	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
-	$(VERBOSE) rm -f $(EXEC) $(LIB_SHARED) $(LIB_STATIC)
-	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
+	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP) $(DIR_LIB)
+	$(VERBOSE) rm -f $(EXEC)
 
 
 mrproper: distclean
