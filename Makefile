@@ -10,6 +10,7 @@ DIR_SRC  = ./src
 DIR_OBJ  = ./obj
 DIR_DEP  = ./dep
 DIR_DOC  = ./doxygen
+DIR_TEST = ./tests
 
 
 $(shell mkdir -p $(DIR_DEP))
@@ -73,6 +74,16 @@ else
 endif
 
 
+#Tests
+TEST ?= 0
+ifeq ($(TEST),1)
+	EXEC      = test_pushbullet
+	DIR_SRC   = ./tests
+	DIR_OBJ   = $(DIR_SRC)
+	LDFLAGS  += -lboost_unit_test_framework
+endif
+
+
 # Look every source files in the directory SRC
 vpath %.cpp $(DIR_SRC)
 
@@ -97,6 +108,11 @@ $(LIB_STATIC): $(DIR_OBJ)/PushBullet.o
 	$(VERBOSE) echo   [AR] [$(OPTIM)]  $@
 	$(VERBOSE) ar rs $@ $< > /dev/null
 
+
+# TODO: Implement the tests
+test: PushBullet.o PushBullet_test.o
+	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
+	$(VERBOSE) $(LD) $? -o $(EXEC) $(LDFLAGS)
 
 
 # Include of the makefiles generated in %.o
@@ -140,10 +156,6 @@ doxygen: $(SRC) $(HDR)
 
 doxywizard: $(SRC) $(HDR)
 	$(VERBOSE) doxywizard Doxyfile
-
-
-# TODO: Implement the tests
-# test:
 
 
 # Indent the files
