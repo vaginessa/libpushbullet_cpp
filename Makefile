@@ -145,11 +145,11 @@ launch: all
 
 
 doxygen: $(SRC) $(HDR)
-	$(VERBOSE) doxygen Doxyfile
+	$(VERBOSE) doxygen ./doxygen/Doxyfile
 
 
 doxywizard: $(SRC) $(HDR)
-	$(VERBOSE) doxywizard Doxyfile
+	$(VERBOSE) doxywizard ./doxygen/Doxyfile
 
 
 # Indent the files
