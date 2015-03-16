@@ -1,13 +1,15 @@
 CC       = clang++
 LD       = clang++
 
-EXEC     = pushbullet
+EXEC       = pushbullet
+LIB_SHARED = libpushbullet.so
+LIB_STATIC = libpushbullet.a
 
 
-DIR_SRC = ./src
-DIR_OBJ = ./obj
-DIR_DEP = ./dep
-DIR_DOC = ./doxygen
+DIR_SRC  = ./src
+DIR_OBJ  = ./obj
+DIR_DEP  = ./dep
+DIR_DOC  = ./doxygen
 
 
 $(shell mkdir -p $(DIR_DEP))
@@ -15,17 +17,17 @@ $(shell mkdir -p $(DIR_OBJ))
 $(shell mkdir -p $(DIR_DOC))
 
 
-CFLAGS  += -W -Wall -Wextra -fmessage-length=0
+CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC
 LDFLAGS += -lcurl -ljsoncpp
 
 
-SRC     = $(shell find $(DIR_SRC) -name '*.cpp')
-OBJ     = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
+SRC      = $(shell find $(DIR_SRC) -name '*.cpp')
+OBJ      = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
 HDR     += $(shell find . -name '*.hpp' -exec dirname {} \;)
-HDR     += $(shell find . -name '*.h' -exec dirname {} \;)
-DEP     = $(shell find . -name '*.d')
+DEP      = $(shell find . -name '*.d')
 
 INCLUDE_DIR = $(foreach var,$(shell echo $(HDR) | uniq),-I$(var))
+
 
 # Which optimisation?
 OPTIM   ?= DEBUG
@@ -46,12 +48,21 @@ ifeq ($(CPP11),1)
 	CFLAGS   += -D_CPP11_ -std=c++11
 endif
 
+
 # BOOST librairies?
 BOOST  ?= 1
 ifeq ($(BOOST),1)
 	CFLAGS   += -D_BOOST_
 	LDFLAGS  += -lboost_regex
 endif
+
+
+# Include librairies directly in the program?
+STATIC  ?= 0
+ifeq ($(STATIC),1)
+	CFLAGS   += -static
+endif
+
 
 # Verbosity
 V            ?= 0
@@ -66,12 +77,27 @@ endif
 vpath %.cpp $(DIR_SRC)
 
 
-all: $(EXEC)
+all: $(EXEC) lib
 
 
 $(EXEC): $(OBJ)
-	$(VERBOSE) echo [LD] [$(OPTIM)]  $(EXEC)
-	$(VERBOSE) $(LD) $(OBJ) -o $(EXEC) $(LDFLAGS)
+	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
+	$(VERBOSE) $(LD) $(OBJ) -o $@ $(LDFLAGS)
+
+
+lib: $(LIB_SHARED) $(LIB_STATIC)
+
+
+$(LIB_SHARED): $(DIR_OBJ)/PushBullet.o
+	$(VERBOSE) echo   [SO] [$(OPTIM)]  $@
+	$(VERBOSE) $(LD) -shared -o $@ $<  $(LDFLAGS)
+
+
+$(LIB_STATIC): $(DIR_OBJ)/PushBullet.o
+	$(VERBOSE) echo   [AR] [$(OPTIM)]  $@
+	$(VERBOSE) ar rs $@ $< > /dev/null
+
+
 
 # Include of the makefiles generated in %.o
 -include $(DEP)
@@ -91,10 +117,11 @@ clean:
 
 
 # distclean : clean all objects files and the executable
+d: distclean
 distclean: clean
 	$(VERBOSE) find . -type f -name '*.d' -delete
 	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
-	$(VERBOSE) rm -rf $(EXEC)
+	$(VERBOSE) rm -f $(EXEC) $(LIB_SHARED) $(LIB_STATIC)
 	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
 
 
@@ -107,9 +134,8 @@ launch: all
 	$(VERBOSE) ./$(EXEC)
 
 
-d: doxygen
 doxygen: $(SRC) $(HDR)
-	$(VERBOSE) doxygen
+	$(VERBOSE) doxygen Doxyfile
 
 
 doxywizard: $(SRC) $(HDR)
