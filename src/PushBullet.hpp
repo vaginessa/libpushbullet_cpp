@@ -138,13 +138,25 @@ public:
      */
     std::string get_token_key(void) const;
 
-
+    /**
+     * @brief Getter of the user name
+     * 
+     * @return A string containing the name of the user
+     */
     std::string get_user_name(void) const;
 
-
+    /**
+     * @brief Getter of the user email
+     * 
+     * @return A string containing the email of the user
+     */
     std::string get_user_email(void) const;
 
-
+    /**
+     * @brief Getter of the url of the user's pictures
+     * 
+     * @return A string containing the url of the user's pictures
+     */
     std::string get_user_url_photo(void) const;
 
 #ifdef _DEBUG_
