@@ -175,7 +175,7 @@ public:
      *
      * @return Error code
      */
-    short post_request(std::string request_url, std::string *result, std::string data);
+    short post_request(const std::string request_url, std::string *result, const std::string data);
 
     /**
      * @brief Do a GET request to the specific URL given by request_url
@@ -185,7 +185,17 @@ public:
      *
      * @return Error code
      */
-    short get_request(std::string request_url, std::string *result);
+    short get_request(const std::string request_url, std::string *result);
+
+    /**
+     * @brief Do a DELETE request to the specific URL given by request_url
+     *
+     * @param request_url URL which you want to DELETE
+     * @param result String that contains the result and that can be reused
+     *
+     * @return Error code
+     */
+    short delete_request(const std::string request_url, std::string *result);
 
     /**
      * @brief Send a note to all devices or a specific device
@@ -249,8 +259,22 @@ public:
      */
     short get_all_devices(void);
 
-
+    /**
+     * @brief Create a new device if not existing
+     * @details Based on the devices that are already registered to the account, if it does not have registered the 
+     *          device it creates a new one.
+     * @return Error code
+     */
     short create_device_if_not_existing(void);
+
+    /**
+     * @brief Delete a device 
+     * @details Allow you to delete (deactivate) a device that has been added to your PushBullet account
+     * 
+     * @param iden Identification string of the device you want to delete
+     * @return Error code
+     */
+    short delete_device(const std::string nickname);
 
 };
 

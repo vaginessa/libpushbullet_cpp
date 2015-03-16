@@ -30,10 +30,19 @@ int main(void) {
     // pb.link(title, body, url);
 
 
-    // pb.display_devices();
+    pb.display_devices();
     // pb.display_user_informations();
 
     pb.create_device_if_not_existing();
+
+    pb.display_devices();
+
+    pb.delete_device("AO725");
+    pb.display_devices();
+
+    // pb.get_all_devices();
+    // pb.display_devices();
+
 
     return EXIT_SUCCESS;
 }

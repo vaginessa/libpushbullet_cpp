@@ -84,7 +84,7 @@ void PushBullet::display_user_informations(void) const {
 
 
 
-short PushBullet::post_request(std::string url_request, std::string *result, std::string data) {
+short PushBullet::post_request(const std::string url_request, std::string *result, const std::string data) {
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
      */
 
@@ -95,7 +95,7 @@ short PushBullet::post_request(std::string url_request, std::string *result, std
     result->clear();
 
     if (s) {
-        CURLcode r;
+        CURLcode r = CURLE_OK;
         curl_slist *http_headers = NULL;
 
         http_headers = curl_slist_append(http_headers, "Content-Type: application/json");
@@ -143,7 +143,7 @@ short PushBullet::post_request(std::string url_request, std::string *result, std
 
 
 
-short PushBullet::get_request(std::string url_request, std::string *result) {
+short PushBullet::get_request(const std::string url_request, std::string *result) {
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
      */
 
@@ -154,7 +154,7 @@ short PushBullet::get_request(std::string url_request, std::string *result) {
     result->clear();
 
     if (s) {
-        CURLcode r;
+        CURLcode r = CURLE_OK;
         curl_slist *http_headers = NULL;
 
         http_headers = curl_slist_append(http_headers, "Content-Type: application/json");
@@ -198,6 +198,61 @@ short PushBullet::get_request(std::string url_request, std::string *result) {
 }
 
 
+short PushBullet::delete_request(const std::string url_request, std::string *result) {
+    /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
+     */
+
+    /*  Start a libcurl easy session
+    */
+    CURL *s = curl_easy_init();
+
+    if (s) {
+        CURLcode r = CURLE_OK;
+        curl_slist *http_headers = NULL;
+
+        http_headers = curl_slist_append(http_headers, "Content-Type: application/json");
+
+        /*  Specify URL to get
+         *  Specify the user using the token key
+         *  Specify the HTTP header
+         */
+        curl_easy_setopt(s, CURLOPT_URL, url_request.c_str());
+        curl_easy_setopt(s, CURLOPT_USERPWD, this->get_token_key().c_str());
+        curl_easy_setopt(s, CURLOPT_HTTPHEADER, http_headers);
+        curl_easy_setopt(s, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+        curl_easy_setopt(s, CURLOPT_WRITEDATA, &(*result));
+
+        /* Set the DELETE command
+         */
+        curl_easy_setopt(s, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+        /* Get data
+        */
+        r = curl_easy_perform(s);
+
+        /* Checking errors
+        */
+        if (r != CURLE_OK) {
+#ifdef _DEBUG_
+            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(r) << std::endl;
+#endif
+            return -2;
+        }
+
+        curl_easy_cleanup(s);
+        curl_slist_free_all(http_headers);
+
+        return 0;
+    }
+    else {
+#ifdef _DEBUG_
+        std::cerr << "curl_easy_init() could not be initiated." << std::endl;
+#endif
+        return -1;
+    }
+}
+
+
 
 short PushBullet::note(const std::string title, const std::string body) {
     std::stringstream data;
@@ -209,7 +264,7 @@ short PushBullet::note(const std::string title, const std::string body) {
          << "\"body\":\""  << body  << "\""
          << "}";
 
-    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0) {
 #ifdef _DEBUG_
         std::cerr << "POST_REQUEST > Impossible to send a note" << std::endl;
 #endif
@@ -222,7 +277,6 @@ short PushBullet::note(const std::string title, const std::string body) {
 #endif
 
     return 0;
-
 }
 
 
@@ -237,7 +291,7 @@ short PushBullet::note(const std::string title, const std::string body, const st
          << "\"body\":\""         << body  << "\""
          << "}";
 
-    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0) {
 #ifdef _DEBUG_
         std::cerr << "POST_REQUEST > Impossible to send a note" << std::endl;
 #endif
@@ -250,7 +304,6 @@ short PushBullet::note(const std::string title, const std::string body, const st
 #endif
 
     return 0;
-
 }
 
 
@@ -265,7 +318,7 @@ short PushBullet::link(const std::string title, const std::string body, const st
          << "\"url\":\""   << url   << "\""
          << "}";
 
-    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0) {
 #ifdef _DEBUG_
         std::cerr << "POST_REQUEST > Impossible to send a link" << std::endl;
 #endif
@@ -278,7 +331,6 @@ short PushBullet::link(const std::string title, const std::string body, const st
 #endif
 
     return 0;
-
 }
 
 
@@ -294,7 +346,7 @@ short PushBullet::link(const std::string title, const std::string body, const st
          << "\"url\":\""         << url   << "\""
          << "}";
 
-    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0){
+    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0) {
 #ifdef _DEBUG_
         std::cerr << "POST_REQUEST > Impossible to send a link" << std::endl;
 #endif
@@ -307,7 +359,6 @@ short PushBullet::link(const std::string title, const std::string body, const st
 #endif
 
     return 0;
-
 }
 
 
@@ -355,7 +406,11 @@ short PushBullet::get_all_devices(void) {
     std::stringstream conversion;
     Json::Value json;               // will contain the root value after parsing.
 
-    if (this->get_request(API_URL_DEVICES, &result) != 0){
+    /* Free the device map
+     */
+    this->_devices.clear();
+
+    if (this->get_request(API_URL_DEVICES, &result) != 0) {
 #ifdef _DEBUG_
         std::cerr << "GET_REQUEST > Impossible to ask for all devices" << std::endl;
 #endif
@@ -390,19 +445,10 @@ short PushBullet::get_all_devices(void) {
 }
 
 
-//curl --header 'Authorization: Bearer <your_access_token_here>' -X POST
-//https://api.pushbullet.com/v2/devices -d nickname=stream_device -d type=stream
-short PushBullet::create_device_if_not_existing(void) {
-
-/*
-{
-    "icon" : "desktop",
-    "model" : "Windows 8.1",
-    "nickname" : "BUYSE",
-    "type" : "windows"
-},
-
+/* curl --header 'Authorization: Bearer <your_access_token_here>' -X POST
+ * https://api.pushbullet.com/v2/devices -d nickname=stream_device -d type=stream
  */
+short PushBullet::create_device_if_not_existing(void) {
     /* Structure that will contain informations about the computer.
     */
     struct utsname buffer;
@@ -423,7 +469,7 @@ short PushBullet::create_device_if_not_existing(void) {
     boost::match_results<std::string::const_iterator> sm;
 #else
     std::regex   regex(DISTRIB_DESCRIPTION_PATTERN);
-    std::smatch   sm;
+    std::smatch  sm;
 #endif
 
 
@@ -463,6 +509,13 @@ short PushBullet::create_device_if_not_existing(void) {
         lsb_release.close();
     }
 
+    if (this->_devices.count(nickname)) {
+#ifdef _DEBUG_
+        std::cerr << "FIND > This device already exists in your account. No need to create a new one." << std::endl;
+#endif
+        return 1;
+    }
+
     data << "{"
          << "\"nickname\" : \"" << nickname << "\", "
          << "\"model\" : \""    << model    << "\", "
@@ -477,6 +530,44 @@ short PushBullet::create_device_if_not_existing(void) {
         return -1;
     }
 
+    /* Refresh the list of devices
+     */
+    this->get_all_devices();
 
+    return 0;
+}
+
+
+/* curl --header 'Authorization: Bearer <your_access_token_here>'
+ * -X DELETE https://api.pushbullet.com/v2/devices/u1qSJddxeKwOGuGW
+ */
+short PushBullet::delete_device(const std::string nickname) {
+    std::stringstream request_url;
+    std::string result;
+    std::string iden;
+
+    if (!this->_devices.count(nickname)) {
+#ifdef _DEBUG_
+        std::cerr << "SELECT_DEVICE > No device that is named " << nickname << "." << std::endl;
+#endif
+        return -1;
+    }
+
+    /* Get the identification number from the _devices map.
+    */
+    iden = this->_devices.at(nickname);
+
+    request_url << API_URL_DEVICES << "/" << iden;
+    if (this->delete_request(request_url.str(), &result) != 0) {
+#ifdef _DEBUG_
+        std::cerr << "DELETE > Impossible to create a new device." << std::endl;
+#endif
+        return -2;
+    }
+
+    /* Refresh the list of devices
+     */
+    this->get_all_devices();
+    
     return 0;
 }
