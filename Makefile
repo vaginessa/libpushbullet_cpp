@@ -32,7 +32,7 @@ INCLUDE_DIR = $(foreach var,$(shell echo $(HDR) | uniq),-I$(var))
 
 
 # Which optimisation?
-OPTIM   ?= NONE
+OPTIM   ?= DEBUG
 ifeq ($(OPTIM),SIZE)
 	CFLAGS   += -Os
 else ifeq ($(OPTIM),SPEED)
@@ -48,6 +48,13 @@ endif
 CPP11  ?= 1
 ifeq ($(CPP11),1)
 	CFLAGS   += -D_CPP11_ -std=c++11
+endif
+
+
+# Show Json Output ?
+JSON  ?= 0
+ifeq ($(JSON),1)
+	CFLAGS   += -D_JSON_
 endif
 
 

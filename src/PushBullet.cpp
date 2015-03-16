@@ -380,7 +380,7 @@ short PushBullet::get_user_informations(void) {
     conversion << result;
     conversion >> json;
 
-#ifdef _DEBUG_
+#ifdef _JSON_
     std::cout << "Json Document: " << std::endl << json   << std::endl;
 #endif
 
@@ -422,7 +422,7 @@ short PushBullet::get_all_devices(void) {
     conversion << result;
     conversion >> json;
 
-#ifdef _DEBUG_
+#ifdef _JSON_
     std::cout << "Json Document: " << std::endl << json   << std::endl;
 #endif
 
@@ -568,6 +568,6 @@ short PushBullet::delete_device(const std::string nickname) {
     /* Refresh the list of devices
      */
     this->get_all_devices();
-    
+
     return 0;
 }

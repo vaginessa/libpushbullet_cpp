@@ -8,7 +8,6 @@ int main(void) {
 
 #ifdef _DEBUG_
     std::cout << "Mode:   DEBUG" << std::endl;
-    std::cout << "APIKEY: " << APIKEY << std::endl;
 #endif
 
     PushBullet      pb = PushBullet(APIKEY);
