@@ -2,8 +2,6 @@ CC       = clang++
 LD       = clang++
 
 EXEC       = pb.test
-LIB_SHARED = libpushbullet.so
-LIB_STATIC = libpushbullet.a
 
 
 DIR_SRC  = ./tests_src
@@ -28,7 +26,7 @@ INCLUDE_DIR = $(foreach var,$(shell echo $(HDR) | uniq),-I$(var))
 
 
 # Which optimisation?
-OPTIM   ?= NONE
+OPTIM   ?= DEBUG
 ifeq ($(OPTIM),SIZE)
 	CFLAGS   += -Os
 else ifeq ($(OPTIM),SPEED)

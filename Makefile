@@ -86,7 +86,7 @@ endif
 vpath %.cpp $(DIR_SRC)
 
 
-all: $(EXEC) lib
+all: $(EXEC)
 
 
 $(EXEC): $(OBJ)
@@ -148,6 +148,17 @@ doxygen: $(SRC) $(HDR)
 
 doxywizard: $(SRC) $(HDR)
 	$(VERBOSE) doxywizard ./doxygen/Doxyfile
+
+
+# Display the help
+help:
+	$(VERBOSE) echo "Usage :"
+	$(VERBOSE) echo "    $$ make [OPTIONS]"
+	$(VERBOSE) echo ""
+	$(VERBOSE) echo "Options available :"
+	$(VERBOSE) echo "    OPTIM=NONE|DEBUG|SIZE|SPEED   (dft : DEBUG)"
+	$(VERBOSE) echo "    STATIC=0|1                    (dft : 0)"
+	$(VERBOSE) echo "    V=0|1                         (dft : 0)"
 
 
 # Indent the files
