@@ -360,7 +360,7 @@ short PushBullet::link(const std::string title, const std::string body, const st
 
 
 
-short PushBullet::get_user_informations(void) {
+short PushBullet::download_user_informations(void) {
     std::string result;
     std::stringstream conversion;
     Json::Value json;               // will contain the root value after parsing.
@@ -398,7 +398,7 @@ short PushBullet::get_user_informations(void) {
 }
 
 
-short PushBullet::get_all_devices(void) {
+short PushBullet::download_all_devices(void) {
     std::string result;
     std::stringstream conversion;
     Json::Value json;               // will contain the root value after parsing.
@@ -516,7 +516,7 @@ short PushBullet::create_device_if_not_existing(void) {
 
     /* Refresh the list of devices
      */
-    this->get_all_devices();
+    this->download_all_devices();
 
     return 0;
 }
@@ -551,7 +551,7 @@ short PushBullet::delete_device(const std::string nickname) {
 
     /* Refresh the list of devices
      */
-    this->get_all_devices();
+    this->download_all_devices();
 
     return 0;
 }

@@ -78,7 +78,7 @@
  * @param size Variable that will help counting the number of characters
  * @param nmemb Variable that will help counting the number of characters
  * @param userp Variable that is going to the application
- * 
+ *
  * @return Number of characters written
  */
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
@@ -167,21 +167,21 @@ public:
 
     /**
      * @brief Getter of the user name
-     * 
+     *
      * @return A string containing the name of the user
      */
     std::string get_user_name(void) const;
 
     /**
      * @brief Getter of the user email
-     * 
+     *
      * @return A string containing the email of the user
      */
     std::string get_user_email(void) const;
 
     /**
      * @brief Getter of the url of the user's pictures
-     * 
+     *
      * @return A string containing the url of the user's pictures
      */
     std::string get_user_url_photo(void) const;
@@ -286,7 +286,7 @@ public:
      *          GET https://api.pushbullet.com/v2/users/me
      * @return Error code
      */
-    short get_user_informations(void);
+    short download_user_informations(void);
 
     /**
      * @brief Get all the devices
@@ -294,20 +294,20 @@ public:
      *          GET https://api.pushbullet.com/v2/devices
      * @return Error code
      */
-    short get_all_devices(void);
+    short download_all_devices(void);
 
     /**
      * @brief Create a new device if not existing
-     * @details Based on the devices that are already registered to the account, if it does not have registered the 
+     * @details Based on the devices that are already registered to the account, if it does not have registered the
      *          device it creates a new one.
      * @return Error code
      */
     short create_device_if_not_existing(void);
 
     /**
-     * @brief Delete a device 
+     * @brief Delete a device
      * @details Allow you to delete (deactivate) a device that has been added to your PushBullet account
-     * 
+     *
      * @param iden Identification string of the device you want to delete
      * @return Error code
      */
