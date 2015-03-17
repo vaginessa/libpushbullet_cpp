@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
         param.add_options()
             ("device,d",
-                boost::program_options::value<std::string>(&device)->default_value("All devices"),
+                boost::program_options::value<std::string>(&device)->default_value("All"),
                 "Send to a specific device (designated by its name).")
             ("title,t",
                 boost::program_options::value<std::string>(&title),

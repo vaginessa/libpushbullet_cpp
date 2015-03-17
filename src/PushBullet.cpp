@@ -383,7 +383,7 @@ short PushBullet::download_user_informations(void) {
 
     /* Get the identification of the device corresponding to all of them
     */
-    this->_devices.insert(std::pair<std::string, std::string>("All devices", json.get("iden", "null").asString()));
+    this->_devices.insert(std::pair<std::string, std::string>("All", json.get("iden", "null").asString()));
 
     /* Get email of the user
      * Get name of the user
