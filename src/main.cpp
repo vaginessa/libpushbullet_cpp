@@ -110,5 +110,9 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
+    /* If no options are given, we display the help
+
+     */
+    std::cout << visible << std::endl;
     return EXIT_SUCCESS;
 }
