@@ -10,13 +10,10 @@
 
 
 PushBullet::PushBullet() {
-    this->_tokenKey = "00000000000000000000000000000000";
-}
+    boost::property_tree::ptree pt;
+    boost::property_tree::ini_parser::read_ini(PUSHBULLET_INI, pt);
 
-
-
-PushBullet::PushBullet(const std::string tokenKey) {
-    this->_tokenKey = tokenKey;
+    this->_tokenKey = pt.get<std::string>(TOKEN_NODE);
 }
 
 
@@ -464,14 +461,8 @@ short PushBullet::create_device_if_not_existing(void) {
 
     /* REGEXS
     */
-#ifdef _BOOST_
     boost::regex regex(DISTRIB_DESCRIPTION_PATTERN, boost::regex::extended);
     boost::match_results<std::string::const_iterator> sm;
-#else
-    std::regex   regex(DISTRIB_DESCRIPTION_PATTERN);
-    std::smatch  sm;
-#endif
-
 
     /*  Get informations about the computer
     */
@@ -495,16 +486,9 @@ short PushBullet::create_device_if_not_existing(void) {
      */
     if (lsb_release.is_open()) {
         while (getline(lsb_release, line)) {
-#ifdef _BOOST_
             if (boost::regex_match(line, sm, regex)) {
                 model = sm[1];
             }
-#else
-            if (std::regex_match(line, sm, regex)) {
-                model = sm[1].str();
-                model.erase(std::remove(model.begin(), model.end(), '\"'), model.end());
-            }
-#endif
         }
         lsb_release.close();
     }

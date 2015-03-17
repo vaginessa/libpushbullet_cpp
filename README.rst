@@ -5,6 +5,10 @@ LIBPUSHBULLET
 C++ library for Pushbullet API
 
 
+Why no list or address pushes ?
+===============================
+
+Since `Pushbullet API v4 <https://docs.pushbullet.com/#changelog>`_ (February 13, 2015): removed list and address from push types, since they are no longer supported by the official clients.
 
 DEPENDENCIES
 ============

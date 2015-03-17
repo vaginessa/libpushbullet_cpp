@@ -1,19 +1,63 @@
 #include "PushBullet.hpp"
 
-#define APIKEY "YpiQLDdMfEkhAFabFZbNwAq8FVcBVGWn"
+#define VERSION 0.0.1
 
 using namespace std;
+namespace po = boost::program_options;
 
-int main(void) {
+int main(int argc, char* argv[]) {
 
 #ifdef _DEBUG_
     std::cout << "Mode:   DEBUG" << std::endl;
 #endif
+/*
+    try {
+        po::options_description generic("generic options");
+        desc.add_options()
+            ("help,h", "produce this help message")
+            ("version,v", "print program's version")
+        ;
 
-    PushBullet      pb = PushBullet(APIKEY);
+        po::variables_map vm;        
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::notify(vm);    
+
+        if (vm.count("help")) {
+            cout << desc << "\n";
+            return 0;
+        }
+
+        if (vm.count("compression")) {
+            cout << "Compression level was set to " 
+                 << vm["compression"].as<double>() << ".\n";
+        } else {
+            cout << "Compression level was not set.\n";
+        }
+    }
+    catch(exception& e) {
+        cerr << "error: " << e.what() << "\n";
+        return 1;
+    }
+    catch(...) {
+        cerr << "Exception of unknown type!\n";
+    }
+*/
+    try {
+        PushBullet  pb;
+    
+        pb.get_user_informations();
+    
+        #ifdef _DEBUG_
+        pb.display_user_informations();
+        pb.display_devices();
+        #endif
+    }
+    catch (const std::exception& e) {
+        std::cerr << "ERROR > " << e.what() << std::endl;
+        return -1; 
+    }
 
     // pb.get_all_devices();
-    pb.get_user_informations();
 
     // std::string example = "{\"type\": \"note\", \"title\": \"Note Title\", \"body\": \"Note Body\"}";
     // pb.pushing(example);
@@ -30,10 +74,6 @@ int main(void) {
 
 
     // pb.display_devices();
-    #ifdef _DEBUG_
-    pb.display_user_informations();
-    pb.display_devices();
-    #endif
     // pb.create_device_if_not_existing();
 
     // pb.display_devices();

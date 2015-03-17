@@ -10,22 +10,12 @@
 #define BOOST_TEST_MODULE "Test the PushBullet class"
 #include <boost/test/included/unit_test.hpp>
 
+
+
 #define APIKEY_TRUE  "YpiQLDdMfEkhAFabFZbNwAq8FVcBVGWn"
 #define APIKEY_FALSE "00000000000000000000000000000000"
-
 #define EMPTY_API_KEY_TRUE "00000000000000000000000000000000"
 #define EMPTY_API_KEY_FALSE "YpiQLDdMfEkhAFabFZbNwAq8FVcBVGWn"
-
-#define USER_NAME_TRUE  "Henri Buyse"
-#define USER_NAME_FALSE "Henri Henri"
-
- #define USER_EMAIL_TRUE  "henri.buyse@gmail.com"
- #define USER_EMAIL_FALSE "henri.henri@gmail.com"
-
- #define URL_PHOTO_TRUE  "https://lh4.googleusercontent.com/-c1xHwAnpR8g/AAAAAAAAAAI/AAAAAAAACQo/Mfe5hxqtoJI/photo.jpg"
- #define URL_PHOTO_FALSE "https://www.google.fr"
-
-
 BOOST_AUTO_TEST_CASE(test_apikey) {
     /* Set up PushBullet accounts
      */
@@ -44,6 +34,9 @@ BOOST_AUTO_TEST_CASE(test_apikey) {
 }
 
 
+
+#define USER_NAME_TRUE  "Henri Buyse"
+#define USER_NAME_FALSE "Henri Henri"
 BOOST_AUTO_TEST_CASE(test_user_name) {
     /* Set up a PushBullet account
      */
@@ -56,6 +49,8 @@ BOOST_AUTO_TEST_CASE(test_user_name) {
 
 
 
+#define USER_EMAIL_TRUE  "henri.buyse@gmail.com"
+#define USER_EMAIL_FALSE "henri.henri@gmail.com"
 BOOST_AUTO_TEST_CASE(test_user_mail) {
     /* Set up a PushBullet account
      */
@@ -68,6 +63,8 @@ BOOST_AUTO_TEST_CASE(test_user_mail) {
 
 
 
+#define URL_PHOTO_TRUE  "https://lh4.googleusercontent.com/-c1xHwAnpR8g/AAAAAAAAAAI/AAAAAAAACQo/Mfe5hxqtoJI/photo.jpg"
+#define URL_PHOTO_FALSE "https://www.google.fr"
 BOOST_AUTO_TEST_CASE(test_user_profile_picture) {
     /* Set up a PushBullet account
      */

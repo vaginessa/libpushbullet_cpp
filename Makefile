@@ -20,7 +20,7 @@ $(shell mkdir -p $(DIR_LIB))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC
-LDFLAGS += -lcurl -ljsoncpp
+LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_program_options
 
 
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp')
@@ -55,14 +55,6 @@ endif
 JSON  ?= 0
 ifeq ($(JSON),1)
 	CFLAGS   += -D_JSON_
-endif
-
-
-# BOOST librairies?
-BOOST  ?= 1
-ifeq ($(BOOST),1)
-	CFLAGS   += -D_BOOST_
-	LDFLAGS  += -lboost_regex
 endif
 
 

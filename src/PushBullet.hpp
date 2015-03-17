@@ -8,20 +8,25 @@
  * @brief Header will be the connection to the API PushBullet
  */
 
-#include <iostream>         // std::cout
-#include <curl/curl.h>      // Whole librairy
-#include <string>           // string
-#include <sstream>          // stringstream
-#include <map>              // map
-#include <json/json.h>      // Json::Value
-#include <sys/utsname.h>    // int uname(struct utsname *buf);
 #include <algorithm>        // tolower
+#include <curl/curl.h>      // Whole librairy
 #include <fstream>          // ifstream
+#include <iostream>         // std::cout
+#include <json/json.h>      // Json::Value
+#include <map>              // map
+#include <sstream>          // stringstream
+#include <string>           // string
+#include <sys/utsname.h>    // int uname(struct utsname *buf);
 
-#ifdef _BOOST_
+/* BOOST LIBRARIES
+ */
+#include <boost/program_options.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 #include <boost/regex.hpp>  // boost::regex
-#else
-#include <regex>            // regex
+
+#ifdef _LOG_
+#include <boost/log/trivial.hpp>
 #endif
 
 
@@ -55,27 +60,57 @@
  */
 #define DISTRIB_DESCRIPTION_PATTERN "DISTRIB_DESCRIPTION=\"(.*)\""
 
+/**
+ * File containing informations about the user account
+ */
+#define PUSHBULLET_INI "./pb.ini"
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * Node that give the user's token from the config file.
+ */
+#define TOKEN_NODE "token.personnal"
+
+/**
+ * @fn WriteMemoryCallback
+ * @brief Write the response of the curl session to a variable.
  *
- * @param contents [description]
- * @param size [description]
- * @param nmemb [description]
- * @param userp [description]
- * @return [description]
+ * @param contents Response from the server
+ * @param size Variable that will help counting the number of characters
+ * @param nmemb Variable that will help counting the number of characters
+ * @param userp Variable that is going to the application
+ * 
+ * @return Number of characters written
  */
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
+/**
+ * @brief Initialization of the logs
+ * @details function that initializes the logs. It initializes:
+ *          - the name of the log files,
+ *          - the log rotation based on size or date,
+ *          - the format of the logging message
+ */
+// void init_log(void) {
+//     boost::log::add_file_log
+//     (
+//         boost::log::keywords::file_name = "log_%N.log",                                           /*< file name pattern >*/
+//         boost::log::keywords::rotation_size = 10 * 1024 * 1024,                                   /*< rotate files every 10 MiB... >*/
+//         boost::log::keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0), /*< ...or at midnight >*/
+//         boost::log::keywords::format = "[%TimeStamp%] > %Message%"                                 /*< log record format >*/
+//     );
+
+//     boost::log::core::get()->set_filter
+//     (
+//         boost::log::trivial::severity >= boost::log::trivial::info
+//     );
+// }
+
 
 /**
- * @brief [brief description]
- * @details [long description]
- *
+ * @brief Class that manage an account using the account's API Token.
  */
 class PushBullet
 {
@@ -113,17 +148,9 @@ public:
     /**
      * @brief Default constructor of class PushBullet.
      * @details This constructor create an default object that cannot be used.
+     *          The token key is taken from the file config.ini (section=token, value=personnal)  allow the developer to access the PushBullet API.
      */
     PushBullet();
-
-    /**
-     * @brief Constructor of class PushBullet.
-     * @details This method is a constructor of the class.
-     *          Its argument tokenKey allow the developer to access the PushBullet API.
-     *
-     * @param tokenKey Access Token given by the PushBullet website in the rubric "Account Settings"
-     */
-    PushBullet(const std::string tokenKey);
 
     /**
      * @brief Default destructor of the class.
@@ -232,7 +259,6 @@ public:
 
     /**
      * @brief Send a link
-     * @details [long description]
      *
      * @param title Title of the URL push
      * @param body Body of the URL push
@@ -244,7 +270,6 @@ public:
 
     /**
      * @brief Send a link
-     * @details [long description]
      *
      * @param title Title of the URL push
      * @param body Body of the URL push
