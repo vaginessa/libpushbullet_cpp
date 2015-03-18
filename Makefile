@@ -83,7 +83,7 @@ all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
-	$(VERBOSE) $(LD) $? -o $@ $(LDFLAGS)
+	$(VERBOSE) $(LD) $^ -o $@ $(LDFLAGS)
 
 
 lib: $(LIB_SHARED) $(LIB_STATIC)
@@ -126,12 +126,6 @@ distclean: clean
 
 
 mrproper: distclean
-
-
-# Launch the program
-l: launch
-launch: all
-	$(VERBOSE) ./$(EXEC)
 
 
 doxygen: $(SRC) $(HDR)
