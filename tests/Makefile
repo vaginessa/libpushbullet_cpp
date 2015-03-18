@@ -70,7 +70,7 @@ all: $(EXEC)
 
 
 $(EXEC): $(OBJ)
-	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
+	$(VERBOSE) echo [LD] [$(OPTIM)] [TEST]  $@
 	$(VERBOSE) $(LD) $^ -o $@ $(LDFLAGS)
 
 
@@ -82,7 +82,7 @@ $(EXEC): $(OBJ)
 # Create the dependency files in dep/%i
 $(DIR_OBJ)/%.o: %.cpp
 	$(VERBOSE) $(CC) $<  $(CFLAGS) $(INCLUDE_DIR) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
-	$(VERBOSE) echo   [CC] [$(OPTIM)]  $<
+	$(VERBOSE) echo   [CC] [$(OPTIM)] [TEST]  $<
 	$(VERBOSE) $(CC) -c -o $@ $< $(CFLAGS) $(INCLUDE_DIR)
 
 
