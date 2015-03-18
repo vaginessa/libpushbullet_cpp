@@ -6,11 +6,12 @@ LIB_SHARED = libpushbullet.so
 LIB_STATIC = libpushbullet.a
 
 
-DIR_SRC  = ./src
-DIR_OBJ  = ./obj
-DIR_DEP  = ./dep
-DIR_DOC  = ./doxygen
-DIR_LIB  = ./lib
+DIR_SRC   = ./src
+DIR_OBJ   = ./obj
+DIR_DEP   = ./dep
+DIR_DOC   = ./doxygen
+DIR_LIB   = ./lib
+DIR_TESTS = ./tests
 
 
 $(shell mkdir -p $(DIR_DEP))
@@ -78,12 +79,16 @@ endif
 vpath %.cpp $(DIR_SRC)
 
 
-all: $(EXEC)
+all: test $(EXEC)
 
 
 $(EXEC): $(OBJ)
 	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
 	$(VERBOSE) $(LD) $^ -o $@ $(LDFLAGS)
+
+
+test:
+	$(VERBOSE) $(MAKE) -C $(DIR_TESTS)
 
 
 lib: $(LIB_SHARED) $(LIB_STATIC)
@@ -113,16 +118,17 @@ $(DIR_OBJ)/%.o: %.cpp
 
 # clean : clean all objects files
 clean:
-	$(VERBOSE) find . -type f -name '*.o' -delete
+	$(VERBOSE) find $(DIR_OBJ) -type f -name '*.o' -delete
 
 
 # distclean : clean all objects files and the executable
 d: distclean
 distclean: clean
-	$(VERBOSE) find . -type f -name '*.d' -delete
+	$(VERBOSE) find $(DIR_DEP) -type f -name '*.d' -delete
 	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
 	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP) $(DIR_LIB)
 	$(VERBOSE) rm -f $(EXEC)
+	$(VERBOSE) $(MAKE) -C $(DIR_TESTS) $@
 
 
 mrproper: distclean

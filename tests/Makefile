@@ -1,11 +1,12 @@
 CC       = clang++
 LD       = clang++
 
-EXEC       = pb.test
+
+EXEC     = pb.test
 
 
-DIR_SRC  = ./tests_src
-DIR_OBJ  = ./tests_obj
+DIR_SRC  = ./src
+DIR_OBJ  = ./obj
 DIR_DEP  = ./dep
 
 
@@ -14,7 +15,7 @@ $(shell mkdir -p $(DIR_OBJ))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC
-LDFLAGS += -lcurl -ljsoncpp -lboost_unit_test_framework
+LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_program_options
 
 
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp')
@@ -45,14 +46,6 @@ ifeq ($(CPP11),1)
 endif
 
 
-# BOOST librairies?
-BOOST  ?= 1
-ifeq ($(BOOST),1)
-	CFLAGS   += -D_BOOST_
-	LDFLAGS  += -lboost_regex
-endif
-
-
 # Include librairies directly in the program?
 STATIC  ?= 0
 ifeq ($(STATIC),1)
@@ -78,7 +71,7 @@ all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
-	$(VERBOSE) $(LD) $? -o $@ $(LDFLAGS)
+	$(VERBOSE) $(LD) $^ -o $@ $(LDFLAGS)
 
 
 # Include of the makefiles generated in %.o
@@ -95,21 +88,16 @@ $(DIR_OBJ)/%.o: %.cpp
 
 # clean : clean all objects files
 clean:
-	$(VERBOSE) find . -type f -name '*.o' -delete
+	$(VERBOSE) find $(DIR_OBJ) -type f -name '*.o' -delete
 
 
 # distclean : clean all objects files and the executable
 d: distclean
 distclean: clean
-	$(VERBOSE) find . -type f -name '*.d' -delete
-	$(VERBOSE) rm -f $(EXEC)
+	$(VERBOSE) find $(DIR_DEP) -type f -name '*.d' -delete
+	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
 	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
+	$(VERBOSE) rm -f $(EXEC)
 
 
 mrproper: distclean
-
-
-# Launch the program
-l: launch
-launch: all
-	$(VERBOSE) ./$(EXEC)
