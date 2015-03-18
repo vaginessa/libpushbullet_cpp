@@ -143,6 +143,8 @@ private:
      */
     std::map<std::string, std::string> _devices;
 
+    std::map<std::string, std::string> _all_iden;
+
 public:
 
     /**
@@ -151,6 +153,13 @@ public:
      *          The token key is taken from the file config.ini (section=token, value=personnal)  allow the developer to access the PushBullet API.
      */
     PushBullet();
+
+    /**
+     * @brief Copy constructor for the class.
+     * 
+     * @param p PushBullet class you want to copy.
+     */
+    PushBullet(const PushBullet& p);
 
     /**
      * @brief Default destructor of the class.
@@ -186,7 +195,6 @@ public:
      */
     std::string get_user_url_photo(void) const;
 
-#ifdef _DEBUG_
     /**
      * @brief Display the Token key
      * @details Display in the terminal the Token key of the user
@@ -203,7 +211,6 @@ public:
      * @details Display all the user informations that I (Henri BUYSE) think important.
      */
     void display_user_informations(void) const;
-#endif
 
     /**
      * @brief Do a POST request to the specific URL given by request_url

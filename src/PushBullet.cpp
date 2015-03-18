@@ -17,6 +17,12 @@ PushBullet::PushBullet() {
 }
 
 
+PushBullet::PushBullet(const PushBullet& p) {
+    /* Copy the principal thing : token key
+     */
+    this->_tokenKey = p.get_token_key();
+}
+
 
 PushBullet::~PushBullet(void) {
 }
@@ -47,7 +53,6 @@ std::string PushBullet::get_user_url_photo(void) const {
 
 
 
-#ifdef _DEBUG_
 void PushBullet::display_token_key(void) const {
     std::cout << "Token Key : " << this->get_token_key() << std::endl;
 }
@@ -55,15 +60,17 @@ void PushBullet::display_token_key(void) const {
 
 
 void PushBullet::display_devices(void) {
-    std::cout << "Device: " << std::endl;
+    std::cout << std::endl
+              << "Device: " << std::endl
+              << "    " << this->_all_iden.begin()->first << " [" << this->_all_iden.begin()->second << "]" << std::endl;   
 
 #ifdef _CPP_11_
     for (auto& x: this->_devices) {
-        std::cout << "- " << x.first << " : " << x.second << '\n';
+        std::cout << "    " << x.first << " [" << x.second << "]" << std::endl;
     }
 #else
     for (std::map<std::string, std::string>::iterator it=this->_devices.begin(); it!=this->_devices.end(); ++it){
-        std::cout << "- " << it->first << " : " << it->second << '\n';
+        std::cout << "    " << it->first << " [" << it->second << "]" << std::endl;
     }
 #endif
 }
@@ -71,13 +78,13 @@ void PushBullet::display_devices(void) {
 
 
 void PushBullet::display_user_informations(void) const {
-    std::cout << "User informations:" << std::endl
-              << "Name:      " << this->get_user_name() << std::endl
-              << "API token: " << this->get_token_key() << std::endl
-              << "Email:     " << this->get_user_email() << std::endl
-              << "URL photo: " << this->get_user_url_photo() << std::endl;
+    std::cout << std::endl
+              << "User informations:" << std::endl
+              << "    Name:      " << this->get_user_name() << std::endl
+              << "    API token: " << this->get_token_key() << std::endl
+              << "    Email:     " << this->get_user_email() << std::endl
+              << "    URL photo: " << this->get_user_url_photo() << std::endl;
 }
-#endif
 
 
 
@@ -269,8 +276,12 @@ short PushBullet::note(const std::string title, const std::string body) {
     }
 
 #ifdef _DEBUG_
-    std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
-    std::cout << "Response CURL: " << std::endl << result << std::endl;
+    Json::Value json;
+
+    data >> json;
+    std::cout << "Data send: "     << std::endl << json << std::endl;
+    std::stringstream(result) >> json;
+    std::cout << "Response CURL: " << std::endl << json << std::endl;
 #endif
 
     return 0;
@@ -296,8 +307,12 @@ short PushBullet::note(const std::string title, const std::string body, const st
     }
 
 #ifdef _DEBUG_
-    std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
-    std::cout << "Response CURL: " << std::endl << result << std::endl;
+    Json::Value json;
+
+    data >> json;
+    std::cout << "Data send: "     << std::endl << json << std::endl;
+    std::stringstream(result) >> json;
+    std::cout << "Response CURL: " << std::endl << json << std::endl;
 #endif
 
     return 0;
@@ -323,8 +338,12 @@ short PushBullet::link(const std::string title, const std::string body, const st
     }
 
 #ifdef _DEBUG_
-    std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
-    std::cout << "Response CURL: " << std::endl << result << std::endl;
+    Json::Value json;
+
+    data >> json;
+    std::cout << "Data send: "     << std::endl << json << std::endl;
+    std::stringstream(result) >> json;
+    std::cout << "Response CURL: " << std::endl << json << std::endl;
 #endif
 
     return 0;
@@ -351,8 +370,12 @@ short PushBullet::link(const std::string title, const std::string body, const st
     }
 
 #ifdef _DEBUG_
-    std::cout << "Data send: "     << std::endl << data.str()   << std::endl;
-    std::cout << "Response CURL: " << std::endl << result << std::endl;
+    Json::Value json;
+
+    data >> json;
+    std::cout << "Data send: "     << std::endl << json << std::endl;
+    std::stringstream(result) >> json;
+    std::cout << "Response CURL: " << std::endl << json << std::endl;
 #endif
 
     return 0;
@@ -383,7 +406,8 @@ short PushBullet::download_user_informations(void) {
 
     /* Get the identification of the device corresponding to all of them
     */
-    this->_devices.insert(std::pair<std::string, std::string>("All", json.get("iden", "null").asString()));
+    this->_all_iden.clear();
+    this->_all_iden.insert(std::pair<std::string, std::string>("All", json.get("iden", "null").asString()));
 
     /* Get email of the user
      * Get name of the user
