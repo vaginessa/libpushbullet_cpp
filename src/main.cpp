@@ -3,8 +3,6 @@
 #define VERSION "0.0.1"
 
 
-// namespace po = boost::program_options;
-
 int main(int argc, char* argv[]) {
 
 #ifdef _DEBUG_
@@ -12,8 +10,9 @@ int main(int argc, char* argv[]) {
 #endif
 
     boost::program_options::variables_map vm;
-    boost::program_options::options_description visible("Allowed options");
+    boost::program_options::options_description visible;
     boost::program_options::options_description generic("Generic options");
+    boost::program_options::options_description display("Display options");
     boost::program_options::options_description type("Type of push");
     boost::program_options::options_description param("Parameters");
 
@@ -29,7 +28,12 @@ int main(int argc, char* argv[]) {
          */
         generic.add_options()
             ("help,h",    "Produce this help message.")
-            ("version,v", "Print program's version.")
+        ;
+
+        display.add_options()
+            ("display-all",      "Display user informations and devices informations.")
+            ("display-devices", "Display devices informations.")
+            ("display-infos",    "Display user informations.")
         ;
 
         type.add_options()
@@ -56,12 +60,10 @@ int main(int argc, char* argv[]) {
                 "Path to the file you want to push.")
         ;
 
-        visible.add(generic).add(type).add(param);
+        visible.add(generic).add(display).add(type).add(param);
 
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, visible), vm);
         boost::program_options::notify(vm);
-
-
     }
     catch(const std::exception& e) {
         std::cerr << "ERROR > " << e.what() << std::endl;
@@ -73,22 +75,18 @@ int main(int argc, char* argv[]) {
     }
 
 
+    /* Asking for help
+     */
     if (vm.count("help")) {
+        std::cout << "Pushbullet v" << VERSION << std::endl;
         std::cout << visible << std::endl;
         return EXIT_SUCCESS;
     }
 
-    if (vm.count("version")) {
-        std::cout << "Pushbullet v" << VERSION << std::endl;
-        return EXIT_SUCCESS;
-    }
 
-
+    /* If pushing a note
+     */
     if (vm.count("note") && vm.count("body") && vm.count("title")) {
-        std::cout << "Title  : " << title << std::endl;
-        std::cout << "Body   : " << body  << std::endl;
-        std::cout << "Device : " << device  << std::endl;
-
         try {
             PushBullet  pb;
 
@@ -103,16 +101,115 @@ int main(int argc, char* argv[]) {
 
         }
         catch (const std::exception& e) {
-            std::cerr << "PUSHBULLET_CREATION > " << e.what() << std::endl;
+            std::cerr << "PB_CREATION > " << e.what() << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
+    else if (vm.count("note")) {
+        std::cerr << "NOTE > Need a title (-t) and a body (-b)" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+
+    /* If pushing a link
+     */
+    if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url")) {
+        try {
+            PushBullet  pb;
+
+            /* Download basic informations
+             */
+            pb.download_user_informations();
+            pb.download_all_devices();
+
+            /* Send a note
+             */
+            pb.link(title, body, url);
+        }
+        catch (const std::exception& e) {
+            std::cerr << "PB_CREATION > " << e.what() << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
+    else if (vm.count("link")) {
+        std::cerr << "LINK > Need a title (-t), a body (-b) and an URL (-u)" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+
+    /* Asking for all the infos
+     */
+    if (vm.count("display-all")){
+        try {
+            PushBullet  pb;
+
+            /* Download basic informations
+             */
+            pb.download_user_informations();
+            pb.download_all_devices();
+
+            /* Send a note
+             */
+            pb.display_user_informations();
+            pb.display_devices();
+        }
+        catch (const std::exception& e) {
+            std::cerr << "PB_CREATION > " << e.what() << std::endl;
             return EXIT_FAILURE;
         }
 
         return EXIT_SUCCESS;
     }
 
-    /* If no options are given, we display the help
 
+    /* Asking for user informations
      */
+    if (vm.count("display-infos")){
+        try {
+            PushBullet  pb;
+
+            /* Download and display the informations about the user
+             */
+            pb.download_user_informations();
+            pb.display_user_informations();
+        }
+        catch (const std::exception& e) {
+            std::cerr << "PB_CREATION > " << e.what() << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
+
+
+    /* Asking for devices informations
+     */
+    if (vm.count("display-devices")){
+        try {
+            PushBullet  pb;
+
+            /* Download and display a list of the account devices
+             */
+            pb.download_all_devices();
+            pb.download_user_informations();
+            pb.display_devices();
+        }
+        catch (const std::exception& e) {
+            std::cerr << "PB_CREATION > " << e.what() << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
+
+
+    /* If no options are given, we display the help
+     */
+    std::cout << "Pushbullet v" << VERSION << std::endl;
     std::cout << visible << std::endl;
     return EXIT_SUCCESS;
 }
