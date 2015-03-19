@@ -1,8 +1,8 @@
 /**
- * @file PushBullet.cpp
+ * @file basics.cpp
  * @author Henri Buyse <a href="mailto:henri.buyse@gmail.com">henri.buyse@gmail.com</a>
  *
- * @brief Methods of the class PushBullet
+ * @brief Constructors, destructor, getters, setters and displayers
  */
 
 #include "PushBullet.hpp"

@@ -9,6 +9,7 @@
 #include "PushBullet.hpp"
 
 
+
 short PushBullet::post_request(const std::string url_request, std::string *result, const std::string data) {
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
      */

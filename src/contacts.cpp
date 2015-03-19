@@ -1,5 +1,5 @@
 /**
- * @file PushBullet.cpp
+ * @file contacts.cpp
  * @author Henri Buyse <a href="mailto:henri.buyse@gmail.com">henri.buyse@gmail.com</a>
  *
  * @brief Methods relative to the contacts

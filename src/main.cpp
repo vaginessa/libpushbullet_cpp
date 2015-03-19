@@ -1,6 +1,16 @@
+/**
+ * @file main.cpp
+ * @author Henri Buyse <a href="mailto:henri.buyse@gmail.com">henri.buyse@gmail.com</a>
+ */
+
 #include "PushBullet.hpp"
 
+#ifdef _LOG_
+#include "log.hpp"
+#endif
+
 #define VERSION "0.0.1"
+
 
 
 int main(int argc, char* argv[]) {

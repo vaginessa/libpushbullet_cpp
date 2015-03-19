@@ -1,12 +1,12 @@
-#ifndef PUSHBULLET_HPP_
-#define PUSHBULLET_HPP_
-
 /**
  * @file PushBullet.hpp
  * @author Henri Buyse <a href="mailto:henri.buyse@gmail.com">henri.buyse@gmail.com</a>
  *
  * @brief Header will be the connection to the API PushBullet
  */
+
+#ifndef PUSHBULLET_HPP_
+#define PUSHBULLET_HPP_
 
 #include <algorithm>        // tolower
 #include <curl/curl.h>      // Whole librairy
@@ -24,10 +24,6 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/regex.hpp>  // boost::regex
-
-#ifdef _LOG_
-#include <boost/log/trivial.hpp>
-#endif
 
 
 /**
@@ -90,28 +86,6 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
-
-/**
- * @brief Initialization of the logs
- * @details function that initializes the logs. It initializes:
- *          - the name of the log files,
- *          - the log rotation based on size or date,
- *          - the format of the logging message
- */
-// void init_log(void) {
-//     boost::log::add_file_log
-//     (
-//         boost::log::keywords::file_name = "log_%N.log",                                           /*< file name pattern >*/
-//         boost::log::keywords::rotation_size = 10 * 1024 * 1024,                                   /*< rotate files every 10 MiB... >*/
-//         boost::log::keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0), /*< ...or at midnight >*/
-//         boost::log::keywords::format = "[%TimeStamp%] > %Message%"                                 /*< log record format >*/
-//     );
-
-//     boost::log::core::get()->set_filter
-//     (
-//         boost::log::trivial::severity >= boost::log::trivial::info
-//     );
-// }
 
 
 /**
@@ -182,7 +156,7 @@ public:
     /**
      * @brief Copy constructor for the class.
      * 
-     * @param p PushBullet class you want to copy.
+     * @param p Class you want to copy.
      */
     PushBullet(const PushBullet& p);
 

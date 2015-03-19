@@ -1,11 +1,13 @@
 /**
- * @file PushBullet.cpp
+ * @file pushes.cpp
  * @author Henri Buyse <a href="mailto:henri.buyse@gmail.com">henri.buyse@gmail.com</a>
  *
  * @brief Methods relative to pushes
  */
 
 #include "PushBullet.hpp"
+
+
 
 short PushBullet::note(const std::string title, const std::string body) {
     std::stringstream data;
