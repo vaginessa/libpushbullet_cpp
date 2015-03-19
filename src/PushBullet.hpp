@@ -322,6 +322,7 @@ public:
      * @brief Get informations about the user
      * @details Get all informations about the user.
      *          GET https://api.pushbullet.com/v2/users/me
+     *          
      * @return Error code
      */
     short download_user_informations(void);
@@ -330,6 +331,7 @@ public:
      * @brief Get all the devices
      * @details Get all the active devices and stock them in the list devices.
      *          GET https://api.pushbullet.com/v2/devices
+     *          
      * @return Error code
      */
     short download_all_devices(void);
@@ -338,6 +340,7 @@ public:
      * @brief Create a new device if not existing
      * @details Based on the devices that are already registered to the account, if it does not have registered the
      *          device it creates a new one.
+     *          
      * @return Error code
      */
     short create_device_if_not_existing(void);
@@ -347,16 +350,27 @@ public:
      * @details Allow you to delete (deactivate) a device that has been added to your PushBullet account
      *
      * @param iden Identification string of the device you want to delete
+     * 
      * @return Error code
      */
     short delete_device(const std::string nickname);
 
     /**
      * @brief Download the list of the user's contacts
-     * @details [long description]
-     * @return [description]
+     * 
+     * @return Error code
      */
     short download_contacts(void);
+
+    /**
+     * @brief Create a contact
+     * 
+     * @param name Contact's name
+     * @param email Contact's email
+     * 
+     * @return Error code
+     */
+    short create_contact(const std::string name, const std::string email);
 
 };
 

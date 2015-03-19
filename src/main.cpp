@@ -220,8 +220,10 @@ int main(int argc, char* argv[]) {
 
             /* Download and display a list of the account devices
              */
-            pb.download_all_devices();
+            // pb.create_contact("Henri Buyse Pro", "henri.buyse.pro@gmail.com");
+            pb.download_contacts();
             pb.display_contacts();
+
         }
         catch (const std::exception& e) {
             std::cerr << "PB_CREATION > " << e.what() << std::endl;
