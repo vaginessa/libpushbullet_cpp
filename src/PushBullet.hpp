@@ -33,12 +33,12 @@
 /**
  * Basic URL for PushBullet API
  */
-#define API_URL         "https://api.pushbullet.com/v2/"
+#define API_URL "https://api.pushbullet.com/v2/"
 
 /**
  * PushBullet API URL for the pushes
  */
-#define API_URL_PUSHES  API_URL "pushes"
+#define API_URL_PUSHES API_URL "pushes"
 
 /**
  * PushBullet API URL for the devices
@@ -48,7 +48,12 @@
 /**
  * PushBullet API URL for the user informations
  */
-#define API_URL_ME      API_URL "users/me"
+#define API_URL_ME API_URL "users/me"
+
+/**
+ * PushBullet API URL to get contacts from the user account
+ */
+#define API_URL_CONTACTS API_URL "contacts"
 
 /**
  * Path to the file /etc/lsb-release
@@ -138,12 +143,32 @@ private:
     std::string _url_photo;
 
     /**
-     * @brief List of devices
+     * @brief List of devices.
      * @details This list contains all the devices that the user has connected to its PushBullet Account.
+     * 
+     * @param n Name of the device on PushBullet
+     * @param e Indentification number of the device on PushBullet
      */
     std::map<std::string, std::string> _devices;
 
-    std::map<std::string, std::string> _all_iden;
+    /**
+     * @brief All devices.
+     * @details This map contains only the identification sequence that can send push notifications to all devices.
+     * 
+     * @param n String containing 'All'
+     * @param e Indentification sequence
+     */
+    std::pair<std::string, std::string> _all_iden;
+
+    /**
+     * @brief List of contacts of the user.
+     * @details [long description]
+     * 
+     * @param n Name of a contact
+     * @param e Email of the contact
+     * @param phone Phone number of the contact
+     */
+    std::map<std::string, std::pair<std::string, std::string> > _contacts;
 
 public:
 
@@ -211,6 +236,12 @@ public:
      * @details Display all the user informations that I (Henri BUYSE) think important.
      */
     void display_user_informations(void) const;
+
+    /**
+     * @brief Display user informations
+     * @details Display all the user informations that I (Henri BUYSE) think important.
+     */
+    void display_contacts(void);
 
     /**
      * @brief Do a POST request to the specific URL given by request_url
@@ -319,6 +350,13 @@ public:
      * @return Error code
      */
     short delete_device(const std::string nickname);
+
+    /**
+     * @brief Download the list of the user's contacts
+     * @details [long description]
+     * @return [description]
+     */
+    short download_contacts(void);
 
 };
 

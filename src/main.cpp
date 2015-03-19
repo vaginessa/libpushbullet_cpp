@@ -14,6 +14,7 @@ int main(int argc, char* argv[]) {
     boost::program_options::options_description generic("Generic options");
     boost::program_options::options_description display("Display options");
     boost::program_options::options_description type("Type of push");
+    boost::program_options::options_description contact("Contact options");
     boost::program_options::options_description param("Parameters");
 
     std::string device;
@@ -60,7 +61,11 @@ int main(int argc, char* argv[]) {
                 "Path to the file you want to push.")
         ;
 
-        visible.add(generic).add(display).add(type).add(param);
+        contact.add_options()
+            ("contact,c", "List all contacts.")
+        ;
+
+        visible.add(generic).add(display).add(type).add(param).add(contact);
 
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, visible), vm);
         boost::program_options::notify(vm);
@@ -206,6 +211,25 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
+
+    /* Contact
+     */
+    if (vm.count("contact")) {
+        try {
+            PushBullet  pb;
+
+            /* Download and display a list of the account devices
+             */
+            pb.download_all_devices();
+            pb.display_contacts();
+        }
+        catch (const std::exception& e) {
+            std::cerr << "PB_CREATION > " << e.what() << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
 
     /* If no options are given, we display the help
      */

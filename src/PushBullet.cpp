@@ -62,12 +62,22 @@ void PushBullet::display_token_key(void) const {
 void PushBullet::display_devices(void) {
     std::cout << std::endl
               << "Device: " << std::endl
-              << "    " << this->_all_iden.begin()->first << " [" << this->_all_iden.begin()->second << "]" << std::endl;   
+              << "    " << this->_all_iden.first << " [" << this->_all_iden.second << "]" << std::endl;
 
     for (auto& x: this->_devices) {
         std::cout << "    " << x.first << " [" << x.second << "]" << std::endl;
     }
 }
+
+
+
+void PushBullet::display_contacts(void) {
+    std::pair<std::string, std::string> val;
+
+    std::cout << "Contact: " << std::endl;
+    for (auto& x: this->_contacts) {
+        val = this->_contacts[x.first];
+        std::cout << "    " << x.first << " - " << val.first << " [" << val.second << "]" << std::endl;
     }
 }
 
@@ -402,8 +412,7 @@ short PushBullet::download_user_informations(void) {
 
     /* Get the identification of the device corresponding to all of them
     */
-    this->_all_iden.clear();
-    this->_all_iden.insert(std::pair<std::string, std::string>("All", json.get("iden", "null").asString()));
+    this->_all_iden = std::make_pair("All", json.get("iden", "null").asString());
 
     /* Get email of the user
      * Get name of the user
@@ -451,12 +460,10 @@ short PushBullet::download_all_devices(void) {
          * If it is, we add it in the list of devices.
          */
         if (devices[index].get("active", false).asBool()) {
-            this->_devices.insert(std::pair<std::string, std::string>(
-                                  devices[index].get("nickname", "null").asString(),
-                                  devices[index].get("iden", "null").asString()));
+            this->_devices.insert(std::make_pair(devices[index].get("nickname", "null").asString(),
+                                                 devices[index].get("iden", "null").asString()));
         }
     }
-
 
     return 0;
 }
@@ -572,6 +579,66 @@ short PushBullet::delete_device(const std::string nickname) {
     /* Refresh the list of devices
      */
     this->download_all_devices();
+
+    return 0;
+}
+
+
+/* curl --header 'Authorization: Bearer <your_access_token_here>'
+ * -X GET https://api.pushbullet.com/v2/contacts
+ * 
+ * {
+ *   "contacts": [
+ *     {
+ *       "iden": "ubdcjAfszs0Smi",
+ *       "name": "Ryan Oldenburg",
+ *       "created": 1399011660.4298899,
+ *       "modified": 1399011660.42976,
+ *       "email": "ryanjoldenburg@gmail.com"
+ *       "email_normalized": "ryanjoldenburg@gmail.com",
+ *       "active": true
+ *     }
+ *   ]
+ * }
+ */
+short PushBullet::download_contacts(void) {
+    std::string result;
+    std::stringstream conversion;
+    Json::Value json;               // will contain the root value after parsing.
+
+    /* Free the device map
+     */
+    this->_contacts.clear();
+
+    if (this->get_request(API_URL_CONTACTS, &result) != 0) {
+#ifdef _DEBUG_
+        std::cerr << "GET_REQUEST > Impossible to ask for the user's contacts" << std::endl;
+#endif
+        return -1;
+    }
+
+    /* Convert the string 'result' to be understand by the Json parser
+    */
+    conversion << result;
+    conversion >> json;
+
+#ifdef _JSON_
+    std::cout << "Json Document: " << std::endl << json   << std::endl;
+#endif
+
+    /* Get the list of devices
+    */
+    const Json::Value contacts = json["contacts"];
+    for (int index = 0; index < (int)contacts.size(); ++index) {
+        /* Check if the device is still active
+         * If it is, we add it in the list of devices.
+         */
+        if (contacts[index].get("active", false).asBool()) {
+            this->_contacts.insert(std::make_pair(contacts[index].get("name",  "null").asString(),
+                                   std::make_pair(contacts[index].get("email", "null").asString(),
+                                                  contacts[index].get("iden", "null").asString())));
+        }
+    }
 
     return 0;
 }
