@@ -64,15 +64,11 @@ void PushBullet::display_devices(void) {
               << "Device: " << std::endl
               << "    " << this->_all_iden.begin()->first << " [" << this->_all_iden.begin()->second << "]" << std::endl;   
 
-#ifdef _CPP_11_
     for (auto& x: this->_devices) {
         std::cout << "    " << x.first << " [" << x.second << "]" << std::endl;
     }
-#else
-    for (std::map<std::string, std::string>::iterator it=this->_devices.begin(); it!=this->_devices.end(); ++it){
-        std::cout << "    " << it->first << " [" << it->second << "]" << std::endl;
+}
     }
-#endif
 }
 
 

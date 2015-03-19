@@ -45,13 +45,6 @@ else ifeq ($(OPTIM),NONE)
 endif
 
 
-# C++ 11 ?
-CPP11  ?= 1
-ifeq ($(CPP11),1)
-	CFLAGS   += -D_CPP11_ -std=c++11
-endif
-
-
 # Show Json Output ?
 JSON  ?= 0
 ifeq ($(JSON),1)
@@ -79,7 +72,7 @@ endif
 vpath %.cpp $(DIR_SRC)
 
 
-all: test $(EXEC)
+all: $(EXEC)
 
 
 $(EXEC): $(OBJ)
