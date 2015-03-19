@@ -14,7 +14,7 @@ $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
 
 
-CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC
+CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC -Wno-unused-function
 LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_program_options
 
 
