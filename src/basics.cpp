@@ -9,14 +9,12 @@
 
 
 
-PushBullet::PushBullet() {
-    this->_tokenKey = "00000000000000000000000000000000";
+PushBullet::PushBullet() : _tokenKey("00000000000000000000000000000000") {
 }
 
 
 
-PushBullet::PushBullet(const std::string tokenKey) {
-    this->_tokenKey = tokenKey;
+PushBullet::PushBullet(const std::string tokenKey) : _tokenKey(tokenKey) {
 }
 
 

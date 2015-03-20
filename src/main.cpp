@@ -26,7 +26,7 @@
 
 /**
  * @brief Get the token key from the file 'pb.ini'
- * 
+ *
  * @return The user's token key.
  */
 std::string get_token_key_ini(void) {
