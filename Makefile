@@ -24,7 +24,7 @@ CFLAGS  += -W -Wall -Wextra -Wno-unused-function -fmessage-length=0 -fPIC -std=c
 LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_program_options
 
 
-SRC      = $(shell find $(DIR_SRC) -name '*.cpp')
+SRC      = $(shell find $(DIR_SRC) -name '*.cpp' | sort)
 OBJ      = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
 HDR     += $(shell find . -name '*.hpp' -exec dirname {} \;)
 DEP      = $(shell find . -name '*.d')
