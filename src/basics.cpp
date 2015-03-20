@@ -10,10 +10,13 @@
 
 
 PushBullet::PushBullet() {
-    boost::property_tree::ptree pt;
-    boost::property_tree::ini_parser::read_ini(PUSHBULLET_INI, pt);
+    this->_tokenKey = "00000000000000000000000000000000";
+}
 
-    this->_tokenKey = pt.get<std::string>(TOKEN_NODE);
+
+
+PushBullet::PushBullet(const std::string tokenKey) {
+    this->_tokenKey = tokenKey;
 }
 
 

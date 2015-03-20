@@ -27,6 +27,11 @@
 
 
 /**
+ * Version of the library
+ */
+#define VERSION "0.0.1"
+
+/**
  * Basic URL for PushBullet API
  */
 #define API_URL "https://api.pushbullet.com/v2/"
@@ -61,15 +66,6 @@
  */
 #define DISTRIB_DESCRIPTION_PATTERN "DISTRIB_DESCRIPTION=\"(.*)\""
 
-/**
- * File containing informations about the user account
- */
-#define PUSHBULLET_INI "./pb.ini"
-
-/**
- * Node that give the user's token from the config file.
- */
-#define TOKEN_NODE "token.personnal"
 
 /**
  * @fn WriteMemoryCallback
@@ -146,12 +142,22 @@ private:
 
 public:
 
+    // The token key is taken from the file config.ini (section=token, value=personnal)  allow the developer to access the PushBullet API.
+
     /**
      * @brief Default constructor of class PushBullet.
      * @details This constructor create an default object that cannot be used.
-     *          The token key is taken from the file config.ini (section=token, value=personnal)  allow the developer to access the PushBullet API.
      */
     PushBullet();
+
+    /**
+     * @brief Constructor of class PushBullet.
+     * @details This method is a constructor of the class.
+     *          Its argument tokenKey allow the developer to access the PushBullet API.
+     *
+     * @param tokenKey Access Token given by the PushBullet website in the rubric "Account Settings"
+     */
+    PushBullet(const std::string tokenKey);
 
     /**
      * @brief Copy constructor for the class.

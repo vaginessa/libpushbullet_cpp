@@ -9,7 +9,40 @@
 #include "log.hpp"
 #endif
 
-#define VERSION "0.0.1"
+#ifndef PUSHBULLET_INI
+/**
+ * File containing informations about the user account
+ */
+#define PUSHBULLET_INI "./pb.ini"
+#endif // PUSHBULLET_INI
+
+#ifndef TOKEN_NODE
+/**
+ * Node that give the user's token from the config file.
+ */
+#define TOKEN_NODE "token.personnal"
+#endif // TOKEN_NODE
+
+
+/**
+ * @brief Get the token key from the file 'pb.ini'
+ * 
+ * @return The user's token key.
+ */
+std::string get_token_key_ini(void) {
+    boost::property_tree::ptree pt;
+
+    try {
+        boost::property_tree::ini_parser::read_ini(PUSHBULLET_INI, pt);
+        return pt.get<std::string>(TOKEN_NODE);
+    }
+    catch (const std::exception& e) {
+        std::cerr << "TOKENKEY > " << e.what() << std::endl
+                  << "TOKENKEY > Using \"00000000000000000000000000000000\"" << std::endl;
+        return "00000000000000000000000000000000";
+    }
+}
+
 
 
 
@@ -90,6 +123,11 @@ int main(int argc, char* argv[]) {
     }
 
 
+
+    /* Get the token from file
+     */
+    PushBullet pb(get_token_key_ini());
+
     /* Asking for help
      */
     if (vm.count("help")) {
@@ -102,23 +140,14 @@ int main(int argc, char* argv[]) {
     /* If pushing a note
      */
     if (vm.count("note") && vm.count("body") && vm.count("title")) {
-        try {
-            PushBullet  pb;
+        /* Download basic informations
+         */
+        pb.download_user_informations();
+        pb.download_all_devices();
 
-            /* Download basic informations
-             */
-            pb.download_user_informations();
-            pb.download_all_devices();
-
-            /* Send a note
-             */
-            pb.note(title, body);
-
-        }
-        catch (const std::exception& e) {
-            std::cerr << "PB_CREATION > " << e.what() << std::endl;
-            return EXIT_FAILURE;
-        }
+        /* Send a note
+         */
+        pb.note(title, body);
 
         return EXIT_SUCCESS;
     }
@@ -131,22 +160,14 @@ int main(int argc, char* argv[]) {
     /* If pushing a link
      */
     if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url")) {
-        try {
-            PushBullet  pb;
+        /* Download basic informations
+         */
+        pb.download_user_informations();
+        pb.download_all_devices();
 
-            /* Download basic informations
-             */
-            pb.download_user_informations();
-            pb.download_all_devices();
-
-            /* Send a note
-             */
-            pb.link(title, body, url);
-        }
-        catch (const std::exception& e) {
-            std::cerr << "PB_CREATION > " << e.what() << std::endl;
-            return EXIT_FAILURE;
-        }
+        /* Send a note
+         */
+        pb.link(title, body, url);
 
         return EXIT_SUCCESS;
     }
@@ -158,24 +179,16 @@ int main(int argc, char* argv[]) {
 
     /* Asking for all the infos
      */
-    if (vm.count("display-all")){
-        try {
-            PushBullet  pb;
+    if (vm.count("display-all")) {
+        /* Download basic informations
+         */
+        pb.download_user_informations();
+        pb.download_all_devices();
 
-            /* Download basic informations
-             */
-            pb.download_user_informations();
-            pb.download_all_devices();
-
-            /* Send a note
-             */
-            pb.display_user_informations();
-            pb.display_devices();
-        }
-        catch (const std::exception& e) {
-            std::cerr << "PB_CREATION > " << e.what() << std::endl;
-            return EXIT_FAILURE;
-        }
+        /* Send a note
+         */
+        pb.display_user_informations();
+        pb.display_devices();
 
         return EXIT_SUCCESS;
     }
@@ -183,19 +196,11 @@ int main(int argc, char* argv[]) {
 
     /* Asking for user informations
      */
-    if (vm.count("display-infos")){
-        try {
-            PushBullet  pb;
-
-            /* Download and display the informations about the user
-             */
-            pb.download_user_informations();
-            pb.display_user_informations();
-        }
-        catch (const std::exception& e) {
-            std::cerr << "PB_CREATION > " << e.what() << std::endl;
-            return EXIT_FAILURE;
-        }
+    if (vm.count("display-infos")) {
+        /* Download and display the informations about the user
+         */
+        pb.download_user_informations();
+        pb.display_user_informations();
 
         return EXIT_SUCCESS;
     }
@@ -203,20 +208,12 @@ int main(int argc, char* argv[]) {
 
     /* Asking for devices informations
      */
-    if (vm.count("display-devices")){
-        try {
-            PushBullet  pb;
-
-            /* Download and display a list of the account devices
-             */
-            pb.download_all_devices();
-            pb.download_user_informations();
-            pb.display_devices();
-        }
-        catch (const std::exception& e) {
-            std::cerr << "PB_CREATION > " << e.what() << std::endl;
-            return EXIT_FAILURE;
-        }
+    if (vm.count("display-devices")) {
+        /* Download and display a list of the account devices
+         */
+        pb.download_all_devices();
+        pb.download_user_informations();
+        pb.display_devices();
 
         return EXIT_SUCCESS;
     }
@@ -225,20 +222,11 @@ int main(int argc, char* argv[]) {
     /* Contact
      */
     if (vm.count("contact")) {
-        try {
-            PushBullet  pb;
-
-            /* Download and display a list of the account devices
-             */
-            // pb.create_contact("Henri Buyse Pro", "henri.buyse.pro@gmail.com");
-            pb.download_contacts();
-            pb.display_contacts();
-
-        }
-        catch (const std::exception& e) {
-            std::cerr << "PB_CREATION > " << e.what() << std::endl;
-            return EXIT_FAILURE;
-        }
+        /* Download and display a list of the account devices
+         */
+        // pb.create_contact("Henri Buyse Pro", "henri.buyse.pro@gmail.com");
+        pb.download_contacts();
+        pb.display_contacts();
 
         return EXIT_SUCCESS;
     }
