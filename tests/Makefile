@@ -15,7 +15,7 @@ $(shell mkdir -p $(DIR_OBJ))
 
 
 CFLAGS  += -W -Wall -Wextra -fmessage-length=0 -fPIC -Wno-unused-function
-LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_program_options
+LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_program_options -lcppunit
 
 
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp')
