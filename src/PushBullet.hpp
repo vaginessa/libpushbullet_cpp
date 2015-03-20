@@ -352,6 +352,24 @@ public:
      */
     short create_contact(const std::string name, const std::string email);
 
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param name [description]
+     * @return [description]
+     */
+    short update_contact(const std::string old_name, const std::string new_name);
+
+    /**
+     * @brief Delete a contact
+     * @details [long description]
+     *
+     * @param name [description]
+     * @return [description]
+     */
+    short delete_contact(const std::string name);
+
 };
 
 #endif //PUSHBULLET_HPP_

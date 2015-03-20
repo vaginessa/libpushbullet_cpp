@@ -78,5 +78,78 @@ short PushBullet::create_contact(const std::string name, const std::string email
     std::cout << "Response CURL: " << std::endl << json << std::endl;
 #endif
 
+    this->download_contacts();
+
+    return 0;
+}
+
+
+
+short PushBullet::update_contact(const std::string old_name, const std::string new_name) {
+    std::stringstream data;
+    std::stringstream request_url;
+    std::string result;
+    std::string iden;
+
+    data << "{"
+         << "\"name\" : \""  << new_name  << "\""
+         << "}";
+
+    if (!this->_contacts.count(old_name)) {
+#ifdef _DEBUG_
+        std::cerr << "SELECT_CONTACT > No contact is named \"" << old_name << "\"." << std::endl;
+#endif
+        return -1;
+    }
+
+    /* Get the identification number from the _contacts map.
+    */
+    iden = this->_contacts.at(old_name).second;
+
+    request_url << API_URL_CONTACTS << "/" << iden;
+    if (this->post_request(request_url.str(), &result, data.str()) != 0) {
+#ifdef _DEBUG_
+        std::cerr << "DELETE_CONTACT > Impossible to update the contact \"" << old_name << "\" to \""
+                  << new_name << "\"." << std::endl;
+#endif
+        return -2;
+    }
+
+    /* Refresh the list of devices
+     */
+    this->download_contacts();
+    return 0;
+}
+
+
+
+short PushBullet::delete_contact(const std::string name) {
+    std::stringstream request_url;
+    std::string result;
+    std::string iden;
+
+    if (!this->_contacts.count(name)) {
+#ifdef _DEBUG_
+        std::cerr << "SELECT_CONTACT > No contact is named \"" << name << "\"." << std::endl;
+#endif
+        return -1;
+    }
+
+    /* Get the identification number from the _contacts map.
+    */
+    iden = this->_contacts.at(name).second;
+
+
+    request_url << API_URL_CONTACTS << "/" << iden;
+    if (this->delete_request(request_url.str(), &result) != 0) {
+#ifdef _DEBUG_
+        std::cerr << "DELETE_CONTACT > Impossible to delete the contact \"" << name << "\"." << std::endl;
+#endif
+        return -2;
+    }
+
+    /* Refresh the list of devices
+     */
+    this->download_contacts();
     return 0;
 }

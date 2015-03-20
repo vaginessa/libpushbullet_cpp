@@ -141,7 +141,7 @@ short PushBullet::delete_device(const std::string nickname) {
 
     if (!this->_devices.count(nickname)) {
 #ifdef _DEBUG_
-        std::cerr << "SELECT_DEVICE > No device that is named " << nickname << "." << std::endl;
+        std::cerr << "SELECT_DEVICE > No device is named " << nickname << "." << std::endl;
 #endif
         return -1;
     }
@@ -153,7 +153,7 @@ short PushBullet::delete_device(const std::string nickname) {
     request_url << API_URL_DEVICES << "/" << iden;
     if (this->delete_request(request_url.str(), &result) != 0) {
 #ifdef _DEBUG_
-        std::cerr << "DELETE > Impossible to create a new device." << std::endl;
+        std::cerr << "DELETE_DEVICE > Impossible to delete the device\"" << nickname << "\"." << std::endl;
 #endif
         return -2;
     }

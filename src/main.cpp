@@ -227,6 +227,9 @@ int main(int argc, char* argv[]) {
         // pb.create_contact("Henri Buyse Pro", "henri.buyse.pro@gmail.com");
         pb.download_contacts();
         pb.display_contacts();
+        pb.update_contact("Henri Buyse Pro", "Henri Buyse Pro");
+        pb.display_contacts();
+        // pb.delete_contact("Henri Buyse Pro");
 
         return EXIT_SUCCESS;
     }
