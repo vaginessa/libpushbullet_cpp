@@ -323,7 +323,9 @@ public:
      *
      * @return [description]
      */
-    short file_request(const std::string path, Json::Value *json_request);
+    short upload_request(const std::string path, Json::Value *json_request);
+
+    short form_request(const std::string url_request, const Json::Value data, const std::string path, std::string *result);
 
     /**
      * @brief [brief description]
