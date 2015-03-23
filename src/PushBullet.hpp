@@ -16,7 +16,9 @@
 #include <map>              // map
 #include <sstream>          // stringstream
 #include <string>           // string
-#include <sys/utsname.h>    // int uname(struct utsname *buf);
+
+#include <libgen.h>         // basename
+#include <sys/utsname.h>    // uname(struct utsname *buf);
 
 /* BOOST LIBRARIES
  */
@@ -57,6 +59,11 @@
 #define API_URL_CONTACTS API_URL "contacts"
 
 /**
+ * PushBullet API URL to do upload requests
+ */
+#define API_URL_FILE_REQUEST API_URL "upload-request"
+
+/**
  * Path to the file /etc/lsb-release
  */
 #define LSB_RELEASE_PATH "/etc/lsb-release"
@@ -65,6 +72,16 @@
  * Regex to get the name of the Linux distribution running the program
  */
 #define DISTRIB_DESCRIPTION_PATTERN "DISTRIB_DESCRIPTION=\"(.*)\""
+
+/**
+ * Size of the buffer for popen
+ */
+#define SIZE_BUFF 1024
+
+/**
+ * Pattern to get the MIME type
+ */
+#define MIME_TYPE_PATTERN ".*:\\s(.*);.*"
 
 
 /**
@@ -297,6 +314,26 @@ public:
      * @return Error code
      */
     short link(const std::string title, const std::string body, const std::string url, const std::string iden);
+
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param path Path to the file
+     *
+     * @return [description]
+     */
+    short file_request(const std::string path, Json::Value *json_request);
+
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param path Path to the file
+     *
+     * @return [description]
+     */
+    short file(const std::string path);
 
     /**
      * @brief Get informations about the user

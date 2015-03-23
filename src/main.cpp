@@ -234,6 +234,16 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
+    /* File
+     */
+    if (vm.count("file") && vm.count("path-file")) {
+        /*
+         */
+        pb.file(path_file);
+
+        return EXIT_SUCCESS;
+    }
+
     /* If no options are given, we display the help
      */
     std::cout << "Pushbullet v" << VERSION << std::endl;

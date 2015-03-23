@@ -13,7 +13,7 @@
 
 #define APIKEY_TRUE "YpiQLDdMfEkhAFabFZbNwAq8FVcBVGWn"
 #define APIKEY_FALSE "00000000000000000000000000000000"
-BOOST_AUTO_TEST_CASE(test_apikey) {    
+BOOST_AUTO_TEST_CASE(test_apikey) {
     /* Set up PushBullet accounts
      */
     PushBullet pb(APIKEY_FALSE);
