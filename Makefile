@@ -90,12 +90,14 @@ test:
 lib: $(LIB_SHARED) $(LIB_STATIC)
 
 
-$(LIB_SHARED): $(DIR_OBJ)/PushBullet.o
+$(LIB_SHARED): $(DIR_OBJ)/basics.o $(DIR_OBJ)/contacts.o $(DIR_OBJ)/devices.o $(DIR_OBJ)/pushes.o \
+			   $(DIR_OBJ)/requests.o $(DIR_OBJ)/user.o
 	$(VERBOSE) echo   [SO] [$(OPTIM)]  $@
 	$(VERBOSE) $(LD) -shared -o $(DIR_LIB)/$@ $<  $(LDFLAGS)
 
 
-$(LIB_STATIC): $(DIR_OBJ)/PushBullet.o
+$(LIB_STATIC): $(DIR_OBJ)/basics.o $(DIR_OBJ)/contacts.o $(DIR_OBJ)/devices.o $(DIR_OBJ)/pushes.o \
+			   $(DIR_OBJ)/requests.o $(DIR_OBJ)/user.o
 	$(VERBOSE) echo   [AR] [$(OPTIM)]  $@
 	$(VERBOSE) ar rs $(DIR_LIB)/$@ $< > /dev/null
 
