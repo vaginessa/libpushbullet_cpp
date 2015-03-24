@@ -294,7 +294,7 @@ the "copyright" line and a pointer to where the full notice is found.
     Using the API given by the team PushBullet, we can :
      - send push notifications like notes, links and files,
      - list, create and delete Pushbullet devices,
-     - list the contacts of the user.
+     - list, create, delete and update the contacts of the user.
      
     Copyright (C) 2015  Henri BUYSE
 

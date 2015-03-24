@@ -15,6 +15,7 @@ DIR_TESTS = ./tests
 
 CONF_UNCRUSTIFY = ./cpp.cfg
 
+INSTALL = $(shell which install) -c -m 644
 
 $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
@@ -135,6 +136,12 @@ doxygen: $(SRC) $(HDR)
 
 doxywizard: $(SRC) $(HDR)
 	$(VERBOSE) doxywizard ./doxygen/Doxyfile
+
+install: lib
+	$(VERBOSE) for hpp in $(HDR)
+	$(VERBOSE) do
+		$(VERBOSE) $(INSTALL) $hpp $(DIR_INSTALL)/include/PushBullet
+	$(VERBOSE) done 
 
 
 # Display the help
