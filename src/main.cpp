@@ -6,21 +6,21 @@
 #include "PushBullet.hpp"
 
 #ifdef _LOG_
-#include "log.hpp"
+    #include "log.hpp"
 #endif
 
 #ifndef PUSHBULLET_INI
 /**
  * File containing informations about the user account
  */
-#define PUSHBULLET_INI "./pb.ini"
+    #define PUSHBULLET_INI "./pb.ini"
 #endif // PUSHBULLET_INI
 
 #ifndef TOKEN_NODE
 /**
  * Node that give the user's token from the config file.
  */
-#define TOKEN_NODE "token.personnal"
+    #define TOKEN_NODE "token.personnal"
 #endif // TOKEN_NODE
 
 
@@ -29,7 +29,8 @@
  *
  * @return The user's token key.
  */
-std::string get_token_key_ini(void) {
+std::string get_token_key_ini(void)
+{
     boost::property_tree::ptree pt;
 
     try {
@@ -37,8 +38,8 @@ std::string get_token_key_ini(void) {
         return pt.get<std::string>(TOKEN_NODE);
     }
     catch (const std::exception& e) {
-        std::cerr << "TOKENKEY > " << e.what() << std::endl
-                  << "TOKENKEY > Using \"00000000000000000000000000000000\"" << std::endl;
+        std::cerr   << "TOKENKEY > " << e.what() << std::endl
+                    << "TOKENKEY > Using \"00000000000000000000000000000000\"" << std::endl;
         return "00000000000000000000000000000000";
     }
 }
@@ -46,11 +47,12 @@ std::string get_token_key_ini(void) {
 
 
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
 
-#ifdef _DEBUG_
+    #ifdef _DEBUG_
     std::cout << "Mode:   DEBUG" << std::endl;
-#endif
+    #endif
 
     boost::program_options::variables_map vm;
     boost::program_options::options_description visible;
@@ -71,13 +73,13 @@ int main(int argc, char* argv[]) {
         /* Add the different options to generic options
          */
         generic.add_options()
-            ("help,h",    "Produce this help message.")
+            ("help,h", "Produce this help message.")
         ;
 
         display.add_options()
-            ("display-all",      "Display user informations and devices informations.")
+            ("display-all", "Display user informations and devices informations.")
             ("display-devices", "Display devices informations.")
-            ("display-infos",    "Display user informations.")
+            ("display-infos", "Display user informations.")
         ;
 
         type.add_options()
@@ -88,20 +90,20 @@ int main(int argc, char* argv[]) {
 
         param.add_options()
             ("device,d",
-                boost::program_options::value<std::string>(&device)->default_value("All"),
-                "Send to a specific device (designated by its name).")
+            boost::program_options::value<std::string>(&device)->default_value("All"),
+            "Send to a specific device (designated by its name).")
             ("title,t",
-                boost::program_options::value<std::string>(&title),
-                "Title of the push.")
+            boost::program_options::value<std::string>(&title),
+            "Title of the push.")
             ("body,b",
-                boost::program_options::value<std::string>(&body),
-                "Body of the push.")
+            boost::program_options::value<std::string>(&body),
+            "Body of the push.")
             ("url,u",
-                boost::program_options::value<std::string>(&url),
-                "URL that will be send push.")
+            boost::program_options::value<std::string>(&url),
+            "URL that will be send push.")
             ("path-file,p",
-                boost::program_options::value<std::string>(&path_file),
-                "Path to the file you want to push.")
+            boost::program_options::value<std::string>(&path_file),
+            "Path to the file you want to push.")
         ;
 
         contact.add_options()
@@ -113,11 +115,11 @@ int main(int argc, char* argv[]) {
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, visible), vm);
         boost::program_options::notify(vm);
     }
-    catch(const std::exception& e) {
+    catch (const std::exception& e) {
         std::cerr << "ERROR > " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-    catch(...) {
+    catch (...) {
         std::cerr << "Exception of unknown type!" << std::endl;
         return EXIT_FAILURE;
     }
@@ -130,16 +132,17 @@ int main(int argc, char* argv[]) {
 
     /* Asking for help
      */
-    if (vm.count("help")) {
+    if (vm.count("help"))
+    {
         std::cout << "Pushbullet v" << VERSION << std::endl;
         std::cout << visible << std::endl;
         return EXIT_SUCCESS;
     }
 
-
     /* If pushing a note
      */
-    if (vm.count("note") && vm.count("body") && vm.count("title")) {
+    if (vm.count("note") && vm.count("body") && vm.count("title"))
+    {
         /* Download basic informations
          */
         pb.download_user_informations();
@@ -151,15 +154,16 @@ int main(int argc, char* argv[]) {
 
         return EXIT_SUCCESS;
     }
-    else if (vm.count("note")) {
+    else if (vm.count("note"))
+    {
         std::cerr << "NOTE > Need a title (-t) and a body (-b)" << std::endl;
         return EXIT_FAILURE;
     }
 
-
     /* If pushing a link
      */
-    if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url")) {
+    if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url"))
+    {
         /* Download basic informations
          */
         pb.download_user_informations();
@@ -171,15 +175,16 @@ int main(int argc, char* argv[]) {
 
         return EXIT_SUCCESS;
     }
-    else if (vm.count("link")) {
+    else if (vm.count("link"))
+    {
         std::cerr << "LINK > Need a title (-t), a body (-b) and an URL (-u)" << std::endl;
         return EXIT_FAILURE;
     }
 
-
     /* Asking for all the infos
      */
-    if (vm.count("display-all")) {
+    if (vm.count("display-all"))
+    {
         /* Download basic informations
          */
         pb.download_user_informations();
@@ -193,10 +198,10 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
-
     /* Asking for user informations
      */
-    if (vm.count("display-infos")) {
+    if (vm.count("display-infos"))
+    {
         /* Download and display the informations about the user
          */
         pb.download_user_informations();
@@ -205,10 +210,10 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
-
     /* Asking for devices informations
      */
-    if (vm.count("display-devices")) {
+    if (vm.count("display-devices"))
+    {
         /* Download and display a list of the account devices
          */
         pb.download_all_devices();
@@ -218,10 +223,10 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
-
     /* Contact
      */
-    if (vm.count("contact")) {
+    if (vm.count("contact"))
+    {
         /* Download and display a list of the account devices
          */
         // pb.create_contact("Henri Buyse Pro", "henri.buyse.pro@gmail.com");
@@ -236,7 +241,8 @@ int main(int argc, char* argv[]) {
 
     /* File
      */
-    if (vm.count("file") && vm.count("path-file")) {
+    if (vm.count("file") && vm.count("path-file"))
+    {
         /*
          */
         pb.file(path_file);

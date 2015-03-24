@@ -95,8 +95,9 @@
  *
  * @return Number of characters written
  */
-static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
+static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+    ((std::string *) userp)->append((char *) contents, size * nmemb);
     return size * nmemb;
 }
 
@@ -411,4 +412,4 @@ public:
 
 };
 
-#endif //PUSHBULLET_HPP_
+#endif // PUSHBULLET_HPP_

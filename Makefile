@@ -13,6 +13,8 @@ DIR_DOC   = ./doxygen
 DIR_LIB   = ./lib
 DIR_TESTS = ./tests
 
+CONF_UNCRUSTIFY = ./cpp.cfg
+
 
 $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
@@ -148,37 +150,4 @@ help:
 
 # Indent the files
 indent:
-	$(VERBOSE) indent \
-	--blank-lines-after-declarations \
-	--blank-lines-after-procedures \
-	--blank-lines-before-block-comments \
-	--no-blank-lines-after-commas \
-	--braces-on-if-line \
-	--braces-on-func-def-line \
-	--braces-on-struct-decl-line \
-	--case-indentation0 \
-	--case-brace-indentation4 \
-	--cuddle-do-while \
-	--declaration-indentation8 \
-	--dont-break-function-decl-args \
-	--dont-break-function-decl-args-end \
-	--dont-break-procedure-type \
-	--dont-format-comments \
-	--format-first-column-comments  \
-	--dont-cuddle-else \
-	--remove-preprocessor-space \
-	--space-after-cast \
-	--space-after-for \
-	--space-after-if \
-	--space-after-parentheses \
-	--no-space-after-function-call-names \
-	--no-space-after-parentheses \
-	--space-after-while \
-	--indent-level4 \
-	--no-tabs \
-	--line-length120 \
-	--start-left-side-of-comments \
-	--comment-indentation60 \
-	--declaration-comment-column60 \
-	--else-endif-column60 \
-	$(DIR_SRC)/*
+	$(VERBOSE) find $(DIR_SRC) -type f -exec uncrustify -c $(CONF_UNCRUSTIFY) --replace {} \;

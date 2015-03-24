@@ -10,17 +10,19 @@
 
 
 
-short PushBullet::post_request(const std::string url_request, std::string *result, const std::string data) {
+short PushBullet::post_request(const std::string url_request, std::string *result, const std::string data)
+{
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
      */
 
     /*  Start a libcurl easy session
-    */
+     */
     CURL *s = curl_easy_init();
 
     result->clear();
 
-    if (s) {
+    if (s)
+    {
         CURLcode r = CURLE_OK;
         curl_slist *http_headers = NULL;
 
@@ -42,25 +44,27 @@ short PushBullet::post_request(const std::string url_request, std::string *resul
         curl_easy_setopt(s, CURLOPT_WRITEDATA, &(*result));
 
         /* Get data
-        */
+         */
         r = curl_easy_perform(s);
 
         /* Checking errors
-        */
-        if (r != CURLE_OK) {
-#ifdef _DEBUG_
+         */
+        if (r != CURLE_OK)
+        {
+            #ifdef _DEBUG_
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(r) << std::endl;
-#endif
+            #endif
             return -2;
         }
 
         curl_easy_cleanup(s);
         curl_slist_free_all(http_headers);
     }
-    else {
-#ifdef _DEBUG_
+    else
+    {
+        #ifdef _DEBUG_
         std::cerr << "curl_easy_init() could not be initiated." << std::endl;
-#endif
+        #endif
         return -1;
     }
 
@@ -69,17 +73,19 @@ short PushBullet::post_request(const std::string url_request, std::string *resul
 
 
 
-short PushBullet::get_request(const std::string url_request, std::string *result) {
+short PushBullet::get_request(const std::string url_request, std::string *result)
+{
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
      */
 
     /*  Start a libcurl easy session
-    */
+     */
     CURL *s = curl_easy_init();
 
     result->clear();
 
-    if (s) {
+    if (s)
+    {
         CURLcode r = CURLE_OK;
         curl_slist *http_headers = NULL;
 
@@ -98,25 +104,27 @@ short PushBullet::get_request(const std::string url_request, std::string *result
         curl_easy_setopt(s, CURLOPT_WRITEDATA, &(*result));
 
         /* Get data
-        */
+         */
         r = curl_easy_perform(s);
 
         /* Checking errors
-        */
-        if (r != CURLE_OK) {
-#ifdef _DEBUG_
+         */
+        if (r != CURLE_OK)
+        {
+            #ifdef _DEBUG_
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(r) << std::endl;
-#endif
+            #endif
             return -2;
         }
 
         curl_easy_cleanup(s);
         curl_slist_free_all(http_headers);
     }
-    else {
-#ifdef _DEBUG_
+    else
+    {
+        #ifdef _DEBUG_
         std::cerr << "curl_easy_init() could not be initiated." << std::endl;
-#endif
+        #endif
         return -1;
     }
 
@@ -124,15 +132,17 @@ short PushBullet::get_request(const std::string url_request, std::string *result
 }
 
 
-short PushBullet::delete_request(const std::string url_request, std::string *result) {
+short PushBullet::delete_request(const std::string url_request, std::string *result)
+{
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
      */
 
     /*  Start a libcurl easy session
-    */
+     */
     CURL *s = curl_easy_init();
 
-    if (s) {
+    if (s)
+    {
         CURLcode r = CURLE_OK;
         curl_slist *http_headers = NULL;
 
@@ -153,25 +163,27 @@ short PushBullet::delete_request(const std::string url_request, std::string *res
         curl_easy_setopt(s, CURLOPT_CUSTOMREQUEST, "DELETE");
 
         /* Get data
-        */
+         */
         r = curl_easy_perform(s);
 
         /* Checking errors
-        */
-        if (r != CURLE_OK) {
-#ifdef _DEBUG_
+         */
+        if (r != CURLE_OK)
+        {
+            #ifdef _DEBUG_
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(r) << std::endl;
-#endif
+            #endif
             return -2;
         }
 
         curl_easy_cleanup(s);
         curl_slist_free_all(http_headers);
     }
-    else {
-#ifdef _DEBUG_
+    else
+    {
+        #ifdef _DEBUG_
         std::cerr << "curl_easy_init() could not be initiated." << std::endl;
-#endif
+        #endif
         return -1;
     }
 
@@ -180,7 +192,8 @@ short PushBullet::delete_request(const std::string url_request, std::string *res
 
 
 
-short PushBullet::upload_request(const std::string path, Json::Value *json_request) {
+short PushBullet::upload_request(const std::string path, Json::Value *json_request)
+{
     char buff[SIZE_BUFF];
     FILE* fp;
     std::stringstream data;
@@ -201,32 +214,37 @@ short PushBullet::upload_request(const std::string path, Json::Value *json_reque
     data << "file -i " << path;
 
     fp = popen(data.str().c_str(), "r");
-    if (fp == NULL) {
-#ifdef _DEBUG_
-        std::cerr << "Failed to run command \"" << data.str() << "\"."<< std::endl;
-#endif
+
+    if (fp == NULL)
+    {
+        #ifdef _DEBUG_
+        std::cerr << "Failed to run command \"" << data.str() << "\"." << std::endl;
+        #endif
         return -2;
     }
 
-    if ( (fgets(buff, sizeof(buff), fp) != NULL) && (boost::regex_match(std::string(buff), sm, regex)) ) {
+    if ( (fgets(buff, sizeof(buff), fp) != NULL) && (boost::regex_match(std::string(buff), sm, regex)) )
+    {
         file_type = sm[1];
     }
-    else {
+    else
+    {
         file_type = "text/plain";
     }
 
     pclose(fp);
 
     data.str(std::string());
-    data << "{"
-         << "\"file_name\" : \"" << file_name << "\", "
-         << "\"file_type\" : \"" << file_type << "\""
-         << "}";
+    data    << "{"
+            << "\"file_name\" : \"" << file_name << "\", "
+            << "\"file_type\" : \"" << file_type << "\""
+            << "}";
 
-    if (this->post_request(API_URL_FILE_REQUEST, &result, data.str()) != 0) {
-#ifdef _DEBUG_
+    if (this->post_request(API_URL_FILE_REQUEST, &result, data.str()) != 0)
+    {
+        #ifdef _DEBUG_
         std::cerr << "POST_REQUEST > Impossible to send a file request" << std::endl;
-#endif
+        #endif
         return -1;
     }
 
@@ -234,47 +252,48 @@ short PushBullet::upload_request(const std::string path, Json::Value *json_reque
      */
     std::stringstream(result) >> *json_request;
 
-#ifdef _DEBUG_
+    #ifdef _DEBUG_
     Json::Value json;
 
     data >> json;
     std::cout << "Data send: "     << std::endl << json << std::endl;
     std::stringstream(result) >> json;
     std::cout << "Response CURL: " << std::endl << json << std::endl;
-#endif
+    #endif
 
     return 0;
 }
 
 
 /*
-curl -i -X POST https://s3.amazonaws.com/pushbullet-uploads \
-  -F awsaccesskeyid=AKIAJJIUQPUDGPM4GD3W \
-  -F acl=public-read \
-  -F key=ubd-CWb1dP5XrZzvHReWHCycIwPyuAMp2R9I/image.png \
-  -F signature=UX5s1uIy1ov6+xlj58JY7rGFKcs= \
-  -F policy=eyKjb25kaXRpb25z6MzcuMjM0MTMwWiJ9 \
-  -F content-type=image/png
-  -F file=@test.txt
+   curl -i -X POST https://s3.amazonaws.com/pushbullet-uploads \
+   -F awsaccesskeyid=AKIAJJIUQPUDGPM4GD3W \
+   -F acl=public-read \
+   -F key=ubd-CWb1dP5XrZzvHReWHCycIwPyuAMp2R9I/image.png \
+   -F signature=UX5s1uIy1ov6+xlj58JY7rGFKcs= \
+   -F policy=eyKjb25kaXRpb25z6MzcuMjM0MTMwWiJ9 \
+   -F content-type=image/png
+   -F file=@test.txt
  */
 short PushBullet::form_request(const std::string url_request, const Json::Value data, const std::string path,
-                               std::string *result ) {
+                               std::string *result )
+{
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/
      */
 
     /*  Start a libcurl easy session
-    */
+     */
     CURL *s;
     CURLcode res;
 
-    struct curl_httppost *formpost=NULL;
-    struct curl_httppost *lastptr=NULL;
-    struct curl_slist *headerlist=NULL;
+    struct curl_httppost *formpost = NULL;
+    struct curl_httppost *lastptr = NULL;
+    struct curl_slist *headerlist = NULL;
 
     curl_global_init(CURL_GLOBAL_ALL);
 
     /* Fill in all form datas
-    //  */
+       //  */
     // for( Json::ValueIterator itr = data.begin() ; itr != data.end() ; itr++ ) {
     //     std::stringstream tmp;
     //     tmp << "\"" << itr.key().asString() << "\"";
@@ -337,7 +356,9 @@ short PushBullet::form_request(const std::string url_request, const Json::Value 
     /* Initialize the session
      */
     s = curl_easy_init();
-    if (s) {
+
+    if (s)
+    {
         CURLcode r = CURLE_OK;
         curl_slist *http_headers = NULL;
 
@@ -346,15 +367,16 @@ short PushBullet::form_request(const std::string url_request, const Json::Value 
         curl_easy_setopt(s, CURLOPT_HTTPPOST, formpost);
 
         /* Get data
-        */
+         */
         r = curl_easy_perform(s);
 
         /* Checking errors
-        */
-        if (r != CURLE_OK) {
-#ifdef _DEBUG_
+         */
+        if (r != CURLE_OK)
+        {
+            #ifdef _DEBUG_
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(r) << std::endl;
-#endif
+            #endif
             return -2;
         }
 
@@ -362,10 +384,11 @@ short PushBullet::form_request(const std::string url_request, const Json::Value 
         curl_formfree(formpost);
         curl_slist_free_all(http_headers);
     }
-    else {
-#ifdef _DEBUG_
+    else
+    {
+        #ifdef _DEBUG_
         std::cerr << "curl_easy_init() could not be initiated." << std::endl;
-#endif
+        #endif
         return -1;
     }
 

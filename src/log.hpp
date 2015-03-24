@@ -34,13 +34,14 @@ namespace keywords = boost::log::keywords;
  *          - the log rotation based on size or date (rotate files every 10 MiB or at midnight),
  *          - the format of the logging message.
  */
-void init_log(void) {
+void init_log(void)
+{
     boost::log::add_file_log(
         boost::log::keywords::file_name = "log_%N.log",
         boost::log::keywords::rotation_size = 10 * 1024 * 1024,
         boost::log::keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
         boost::log::keywords::format = "[%TimeStamp%] > %Message%"
-    );
+        );
 
     boost::log::core::get()->set_filter
     (
@@ -53,7 +54,8 @@ void init_log(void) {
  * @brief Function to test the log
  * @details [long description]
  */
-void test_log(void) {
+void test_log(void)
+{
     init_log();
     logging::add_common_attributes();
 
