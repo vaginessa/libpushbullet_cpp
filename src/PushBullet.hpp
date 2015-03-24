@@ -150,7 +150,6 @@ private:
 
     /**
      * @brief List of contacts of the user.
-     * @details [long description]
      *
      * @param n Name of a contact
      * @param e Email of the contact
@@ -317,24 +316,41 @@ public:
     short link(const std::string title, const std::string body, const std::string url, const std::string iden);
 
     /**
-     * @brief [brief description]
-     * @details [long description]
+     * @brief Make an upload request to the server
+     * @details As it is written in the documentation
      *
      * @param path Path to the file
+     * @param json_request The Json dictionary that comes back from the upload request
      *
-     * @return [description]
+     * @return Error code
      */
     short upload_request(const std::string path, Json::Value *json_request);
 
-    short form_request(const std::string url_request, const Json::Value data, const std::string path, std::string *result);
+    /**
+     * @brief Upload the file to the server
+     *
+     * @param url_request URL given from the upload request contained in the Json response
+     * @param data The dictionary conatined in the key 'data' from the Json response of the server
+     * @param path Path to the file
+     * @param result String that contains the result and that can be reused
+     *
+     * @return Error code
+     */
+    short form_request(const std::string url_request, const Json::Value data, const std::string path,
+                       std::string *result);
 
     /**
-     * @brief [brief description]
-     * @details [long description]
+     * @brief Upload a file and make a push notifications
+     * @details This method makes all the steps to make a file push:
+     *          - make a upload request,
+     *          - upload the file to the server,
+     *          - push a notification to devices.
      *
+     * @param title Title of the file push
+     * @param body Body of the file push
      * @param path Path to the file
      *
-     * @return [description]
+     * @return Error code
      */
     short file(const std::string title, const std::string body, const std::string path);
 
@@ -393,20 +409,21 @@ public:
     short create_contact(const std::string name, const std::string email);
 
     /**
-     * @brief [brief description]
-     * @details [long description]
+     * @brief Update the name of a contact
      *
-     * @param name [description]
-     * @return [description]
+     * @param old_name Name of the contact you want to change
+     * @param new_name New name of the contact
+     *
+     * @return Error code
      */
     short update_contact(const std::string old_name, const std::string new_name);
 
     /**
      * @brief Delete a contact
-     * @details [long description]
      *
-     * @param name [description]
-     * @return [description]
+     * @param name Name of the contact you want to delete
+     *
+     * @return Error code
      */
     short delete_contact(const std::string name);
 
