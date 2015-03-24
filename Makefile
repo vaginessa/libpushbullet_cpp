@@ -157,4 +157,4 @@ help:
 
 # Indent the files
 indent:
-	$(VERBOSE) find $(DIR_SRC) -type f -exec uncrustify -c $(CONF_UNCRUSTIFY) --replace {} \;
+	$(VERBOSE) find $(DIR_SRC) -type f -exec uncrustify -c $(CONF_UNCRUSTIFY) --no-backup --replace {} \;
