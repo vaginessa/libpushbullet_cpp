@@ -284,71 +284,32 @@ short PushBullet::form_request(const std::string url_request, const Json::Value 
     /*  Start a libcurl easy session
      */
     CURL *s;
-    CURLcode res;
+    CURLcode r = CURLE_OK;
 
     struct curl_httppost *formpost = NULL;
     struct curl_httppost *lastptr = NULL;
-    struct curl_slist *headerlist = NULL;
+    curl_slist *http_headers = NULL;
 
     curl_global_init(CURL_GLOBAL_ALL);
 
     /* Fill in all form datas
-       //  */
-    // for( Json::ValueIterator itr = data.begin() ; itr != data.end() ; itr++ ) {
-    //     std::stringstream tmp;
-    //     tmp << "\"" << itr.key().asString() << "\"";
+     */
+    for( Json::ValueIterator itr = data.begin() ; itr != data.end() ; itr++ ) {
+        std::stringstream tmp;
 
-    //     curl_formadd(&formpost,
-    //                  &lastptr,
-    //                  CURLFORM_COPYNAME, tmp.str().c_str(),
-    //                  CURLFORM_COPYCONTENTS, std::string(itr->asString()).c_str(),
-    //                  CURLFORM_END);
-    // }
-
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "awsaccesskeyid",
-                 CURLFORM_COPYCONTENTS, std::string(data["awsaccesskeyid"].asString()).c_str(),
-                 CURLFORM_END);
-
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "acl",
-                 CURLFORM_COPYCONTENTS, std::string(data["acl"].asString()).c_str(),
-                 CURLFORM_END);
-
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "key",
-                 CURLFORM_COPYCONTENTS, std::string(data["key"].asString()).c_str(),
-                 CURLFORM_END);
-
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "signature",
-                 CURLFORM_COPYCONTENTS, std::string(data["signature"].asString()).c_str(),
-                 CURLFORM_END);
-
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "policy",
-                 CURLFORM_COPYCONTENTS, std::string(data["policy"].asString()).c_str(),
-                 CURLFORM_END);
-
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "content-type",
-                 CURLFORM_COPYCONTENTS, std::string(data["content-type"].asString()).c_str(),
-                 CURLFORM_END);
+        tmp << itr.key().asString();
+        curl_formadd(&formpost,
+                     &lastptr,
+                     CURLFORM_COPYNAME, tmp.str().c_str(),
+                     CURLFORM_COPYCONTENTS, std::string(itr->asString()).c_str(),
+                     CURLFORM_END);
+    }
 
     /* Fill in the file upload field
      */
-    std::stringstream tmp;
-    tmp << "@" << path;
     curl_formadd(&formpost,
                  &lastptr,
                  CURLFORM_COPYNAME, "file",
-                 CURLFORM_FILE, tmp.str().c_str(),
                  CURLFORM_FILE, path.c_str(),
                  CURLFORM_END);
 
@@ -359,12 +320,11 @@ short PushBullet::form_request(const std::string url_request, const Json::Value 
 
     if (s)
     {
-        CURLcode r = CURLE_OK;
-        curl_slist *http_headers = NULL;
-
-        http_headers = curl_slist_append(http_headers, "Expect:");
+        http_headers = curl_slist_append(http_headers, "Content-Type: multipart/form-data");
         curl_easy_setopt(s, CURLOPT_URL, url_request.c_str());
         curl_easy_setopt(s, CURLOPT_HTTPPOST, formpost);
+        curl_easy_setopt(s, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+        curl_easy_setopt(s, CURLOPT_WRITEDATA, &(*result));
 
         /* Get data
          */

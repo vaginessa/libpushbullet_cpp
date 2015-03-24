@@ -142,7 +142,7 @@ short PushBullet::link(const std::string title, const std::string body, const st
 
 
 
-short PushBullet::file(const std::string path)
+short PushBullet::file(const std::string title, const std::string body, const std::string path)
 {
     Json::Value json_request;
     std::string result;
@@ -162,11 +162,12 @@ short PushBullet::file(const std::string path)
     if (this->form_request(json_request["upload_url"].asString(), data, path, &result) < 0)
     {
         #ifdef _DEBUG_
-        std::cerr << "Could not get a reply from " << std::endl;
+        std::cerr << "Could not get a reply from " << json_request["upload_url"].asString() << std::endl;
         #endif
         return -1;
     }
 
+    this->link(title, body, json_request["file_url"].asString());
 
     return 0;
 }

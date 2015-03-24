@@ -241,11 +241,11 @@ int main(int argc, char* argv[])
 
     /* File
      */
-    if (vm.count("file") && vm.count("path-file"))
+    if (vm.count("file") && vm.count("path-file") && vm.count("body") && vm.count("title"))
     {
         /*
          */
-        pb.file(path_file);
+        pb.file(title, body, path_file);
 
         return EXIT_SUCCESS;
     }

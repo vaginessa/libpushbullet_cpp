@@ -336,7 +336,7 @@ public:
      *
      * @return [description]
      */
-    short file(const std::string path);
+    short file(const std::string title, const std::string body, const std::string path);
 
     /**
      * @brief Get informations about the user
