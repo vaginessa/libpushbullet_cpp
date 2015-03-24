@@ -265,16 +265,7 @@ short PushBullet::upload_request(const std::string path, Json::Value *json_reque
 }
 
 
-/*
-   curl -i -X POST https://s3.amazonaws.com/pushbullet-uploads \
-   -F awsaccesskeyid=AKIAJJIUQPUDGPM4GD3W \
-   -F acl=public-read \
-   -F key=ubd-CWb1dP5XrZzvHReWHCycIwPyuAMp2R9I/image.png \
-   -F signature=UX5s1uIy1ov6+xlj58JY7rGFKcs= \
-   -F policy=eyKjb25kaXRpb25z6MzcuMjM0MTMwWiJ9 \
-   -F content-type=image/png
-   -F file=@test.txt
- */
+
 short PushBullet::form_request(const std::string url_request, const Json::Value data, const std::string path,
                                std::string *result )
 {
@@ -294,7 +285,8 @@ short PushBullet::form_request(const std::string url_request, const Json::Value 
 
     /* Fill in all form datas
      */
-    for( Json::ValueIterator itr = data.begin() ; itr != data.end() ; itr++ ) {
+    for ( Json::ValueIterator itr = data.begin(); itr != data.end(); itr++ )
+    {
         std::stringstream tmp;
 
         tmp << itr.key().asString();

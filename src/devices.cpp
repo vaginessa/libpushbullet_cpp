@@ -95,7 +95,7 @@ short PushBullet::create_device_if_not_existing(void)
      */
     nickname = std::string(buffer.nodename);
     type = std::string(buffer.sysname);
-    std::transform(type.begin(), type.end(), type.begin(), ::tolower); // Convert to lower
+    std::transform(type.begin(), type.end(), type.begin(), ::tolower);     // Convert to lower
     model = std::string(buffer.sysname) + '-' + std::string(buffer.release);
 
     /* Try to open the file /etc/release to get the model (OS Version)

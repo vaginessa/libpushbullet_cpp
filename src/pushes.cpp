@@ -146,6 +146,7 @@ short PushBullet::file(const std::string title, const std::string body, const st
 {
     Json::Value json_request;
     std::string result;
+    std::stringstream data;
 
     if (this->upload_request(path, &json_request) < 0)
     {
@@ -157,9 +158,9 @@ short PushBullet::file(const std::string title, const std::string body, const st
 
     /* Get the dictionary 'data'
      */
-    const Json::Value data = json_request["data"];
+    const Json::Value data_json = json_request["data"];
 
-    if (this->form_request(json_request["upload_url"].asString(), data, path, &result) < 0)
+    if (this->form_request(json_request["upload_url"].asString(), data_json, path, &result) < 0)
     {
         #ifdef _DEBUG_
         std::cerr << "Could not get a reply from " << json_request["upload_url"].asString() << std::endl;
@@ -167,7 +168,31 @@ short PushBullet::file(const std::string title, const std::string body, const st
         return -1;
     }
 
-    this->link(title, body, json_request["file_url"].asString());
+    data    << "{"
+            << "\"type\":\"file\", "
+            << "\"file_name\":\"" << json_request["file_name"].asString() << "\", "
+            << "\"file_type\":\"" << json_request["file_type"].asString() << "\", "
+            << "\"title\":\"" << title << "\", "
+            << "\"body\":\"" << body  << "\", "
+            << "\"file_url\":\""  << json_request["file_url"].asString()  << "\""
+            << "}";
+
+    if (this->post_request(API_URL_PUSHES, &result, data.str()) != 0)
+    {
+        #ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to send a file" << std::endl;
+        #endif
+        return -1;
+    }
+
+    #ifdef _DEBUG_
+    Json::Value json;
+
+    data >> json;
+    std::cout << "Data send: "     << std::endl << json << std::endl;
+    std::stringstream(result) >> json;
+    std::cout << "Response CURL: " << std::endl << json << std::endl;
+    #endif
 
     return 0;
 }
