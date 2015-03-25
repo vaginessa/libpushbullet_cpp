@@ -225,7 +225,7 @@ public:
      *
      * @return The identification of the device or the contact. If nothing found, return the identification of the user account
      */
-    std::string get_iden_from_name(std::string name) const;
+    std::string get_iden_from_name(std::string name = std::string()) const;
 
     /**
      * @brief Display the Token key
