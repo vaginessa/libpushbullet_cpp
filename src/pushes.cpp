@@ -227,3 +227,33 @@ short PushBullet::list_pushes(void)
 
     return 0;
 }
+
+
+
+short PushBullet::update_push(const std::string push_iden, const bool dismissed) {
+    std::stringstream data;
+    std::string result;
+    std::stringstream url_request;
+
+    data << "{"
+         << "\"dismissed\" : " << ((dismissed) ? "true" : "false")
+         << "}";
+
+    url_request << API_URL_PUSHES << "/" << push_iden;
+    if (this->post_request(url_request.str(), &result, data.str()) != 0)
+    {
+        #ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to modify the push " << push_iden << "." << std::endl;
+        #endif
+        return -1;
+    }
+
+    #ifdef _JSON_
+    Json::Value json;
+    std::stringstream(result) >> json;
+
+    std::cout << "Json Document: " << std::endl << json << std::endl;
+    #endif
+
+    return 0;
+}

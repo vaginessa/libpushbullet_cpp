@@ -334,6 +334,16 @@ public:
     short list_pushes(void);
 
     /**
+     * @brief Update a push notification
+     * 
+     * @param push_iden Identification of the push
+     * @param dismissed Set to true to mark the push as dismissed. All devices displaying this push should hide it from view.
+     * 
+     * @return Error code
+     */
+    short update_push(const std::string push_iden, const bool dismissed);
+
+    /**
      * @brief Make an upload request to the server
      * @details As it is written in the documentation
      *
