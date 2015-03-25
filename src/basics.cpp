@@ -64,6 +64,24 @@ std::string PushBullet::get_user_url_photo(void) const
 
 
 
+std::string PushBullet::get_iden_from_name(std::string name) const
+{
+    if (this->_devices.count(name))
+    {
+        return this->_devices.find(name)->second;
+    }
+    else if (this->_contacts.count(name))
+    {
+        return this->_contacts.find(name)->second.second;
+    }
+    else
+    {
+        return this->_all_iden.second;
+    }
+}
+
+
+
 void PushBullet::display_token_key(void) const
 {
     std::cout << "Token Key : " << this->get_token_key() << std::endl;

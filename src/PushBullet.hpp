@@ -218,6 +218,16 @@ public:
     std::string get_user_url_photo(void) const;
 
     /**
+     * @brief Get the identification from a name
+     * @details Get the identification of a device or a contact in function of its name.
+     *
+     * @param name Name of a device or a contact
+     *
+     * @return The identification of the device or the contact. If nothing found, return the identification of the user account
+     */
+    std::string get_iden_from_name(std::string name) const;
+
+    /**
      * @brief Display the Token key
      * @details Display in the terminal the Token key of the user
      */
@@ -337,7 +347,7 @@ public:
      * @return Error code
      */
     short form_request(const std::string url_request, const Json::Value data, const std::string path,
-                       std::string *result);
+        std::string *result);
 
     /**
      * @brief Upload a file and make a push notifications

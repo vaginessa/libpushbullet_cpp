@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
     boost::program_options::options_description type("Type of push");
     boost::program_options::options_description contact("Contact options");
     boost::program_options::options_description param("Parameters");
+    boost::program_options::options_description test("Testing param");
 
     std::string device;
     std::string title;
@@ -110,7 +111,11 @@ int main(int argc, char* argv[])
             ("contact,c", "List all contacts.")
         ;
 
-        visible.add(generic).add(display).add(type).add(param).add(contact);
+        test.add_options()
+            ("test", "Testing parameters")
+        ;
+
+        visible.add(generic).add(display).add(type).add(param).add(contact).add(test);
 
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, visible), vm);
         boost::program_options::notify(vm);
@@ -130,6 +135,12 @@ int main(int argc, char* argv[])
      */
     PushBullet pb(get_token_key_ini());
 
+    /* Download all infos
+     */
+    pb.download_all_devices();
+    pb.download_user_informations();
+    pb.download_contacts();
+
     /* Asking for help
      */
     if (vm.count("help"))
@@ -143,11 +154,6 @@ int main(int argc, char* argv[])
      */
     if (vm.count("note") && vm.count("body") && vm.count("title"))
     {
-        /* Download basic informations
-         */
-        pb.download_user_informations();
-        pb.download_all_devices();
-
         /* Send a note
          */
         pb.note(title, body);
@@ -164,11 +170,6 @@ int main(int argc, char* argv[])
      */
     if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url"))
     {
-        /* Download basic informations
-         */
-        pb.download_user_informations();
-        pb.download_all_devices();
-
         /* Send a note
          */
         pb.link(title, body, url);
@@ -185,13 +186,6 @@ int main(int argc, char* argv[])
      */
     if (vm.count("display-all"))
     {
-        /* Download basic informations
-         */
-        pb.download_user_informations();
-        pb.download_all_devices();
-
-        /* Send a note
-         */
         pb.display_user_informations();
         pb.display_devices();
 
@@ -202,8 +196,6 @@ int main(int argc, char* argv[])
      */
     if (vm.count("display-infos"))
     {
-        /* Download and display the informations about the user
-         */
         pb.download_user_informations();
         pb.display_user_informations();
 
@@ -214,10 +206,6 @@ int main(int argc, char* argv[])
      */
     if (vm.count("display-devices"))
     {
-        /* Download and display a list of the account devices
-         */
-        pb.download_all_devices();
-        pb.download_user_informations();
         pb.display_devices();
 
         return EXIT_SUCCESS;
@@ -227,10 +215,6 @@ int main(int argc, char* argv[])
      */
     if (vm.count("contact"))
     {
-        /* Download and display a list of the account devices
-         */
-        // pb.create_contact("Henri Buyse Pro", "henri.buyse.pro@gmail.com");
-        pb.download_contacts();
         pb.display_contacts();
         pb.update_contact("Henri Buyse Pro", "Henri Buyse Pro");
         pb.display_contacts();
@@ -246,6 +230,17 @@ int main(int argc, char* argv[])
         /*
          */
         pb.file(title, body, path_file);
+
+        return EXIT_SUCCESS;
+    }
+
+    if (vm.count("test"))
+    {
+        pb.display_devices();
+        std::cout << pb.get_iden_from_name("All")     << std::endl;
+        std::cout << pb.get_iden_from_name("Firefox") << std::endl;
+        std::cout << pb.get_iden_from_name("BUYSE")   << std::endl;
+        std::cout << pb.get_iden_from_name("test")    << std::endl;
 
         return EXIT_SUCCESS;
     }

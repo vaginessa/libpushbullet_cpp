@@ -57,9 +57,7 @@ short PushBullet::download_all_devices(void)
 }
 
 
-/* curl --header 'Authorization: Bearer <your_access_token_here>' -X POST
- * https://api.pushbullet.com/v2/devices -d nickname=stream_device -d type=stream
- */
+
 short PushBullet::create_device_if_not_existing(void)
 {
     /* Structure that will contain informations about the computer.
@@ -143,9 +141,7 @@ short PushBullet::create_device_if_not_existing(void)
 }
 
 
-/* curl --header 'Authorization: Bearer <your_access_token_here>'
- * -X DELETE https://api.pushbullet.com/v2/devices/u1qSJddxeKwOGuGW
- */
+
 short PushBullet::delete_device(const std::string nickname)
 {
     std::stringstream request_url;
