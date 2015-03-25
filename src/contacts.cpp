@@ -12,6 +12,7 @@
 short PushBullet::download_contacts(void)
 {
     std::string result;
+    Json::Value json;
 
     /* Free the device map
      */
@@ -26,10 +27,9 @@ short PushBullet::download_contacts(void)
         return -1;
     }
 
-    #ifdef _JSON_
-    Json::Value json;               // will contain the root value after parsing.
     std::stringstream(result) >> json;
 
+    #ifdef _JSON_
     std::cout << "Json Document: " << std::endl << json   << std::endl;
     #endif
 

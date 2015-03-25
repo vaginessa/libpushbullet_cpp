@@ -12,6 +12,7 @@
 short PushBullet::download_user_informations(void)
 {
     std::string result;
+    Json::Value json;
 
     if (this->get_request(API_URL_ME, &result) != 0)
     {
@@ -21,10 +22,9 @@ short PushBullet::download_user_informations(void)
         return -1;
     }
 
-    #ifdef _JSON_
-    Json::Value json;
     std::stringstream(result) >> json;
 
+    #ifdef _JSON_
     std::cout << "Json Document: " << std::endl << json   << std::endl;
     #endif
 
