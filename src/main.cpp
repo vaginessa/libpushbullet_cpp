@@ -226,9 +226,7 @@ int main(int argc, char* argv[])
 
     if (vm.count("test"))
     {
-        // pb.list_pushes();
-        pb.update_push("ujEIL5AaxhYsjAyGmVhHYO", 0);
-        // pb.update_push("ujEIL5AaxhYsjAyGmVhHYO", 1);
+        pb.delete_push("ujEIL5AaxhYsjAiPmY7Kj6");
 
         return EXIT_SUCCESS;
     }

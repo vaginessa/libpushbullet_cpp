@@ -335,13 +335,29 @@ public:
 
     /**
      * @brief Update a push notification
-     * 
+     *
      * @param push_iden Identification of the push
      * @param dismissed Set to true to mark the push as dismissed. All devices displaying this push should hide it from view.
-     * 
+     *
      * @return Error code
      */
     short update_push(const std::string push_iden, const bool dismissed);
+
+    /**
+     * @brief Delete a specific push
+     *
+     * @param push_iden Identification of the push you want to delete
+     *
+     * @return Error code
+     */
+    short delete_push(const std::string push_iden);
+
+    /**
+     * @brief Delete all pushes
+     *
+     * @return Error code
+     */
+    short delete_all_pushes(void);
 
     /**
      * @brief Make an upload request to the server

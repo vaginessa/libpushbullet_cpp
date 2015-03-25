@@ -226,16 +226,18 @@ short PushBullet::list_pushes(void)
 
 
 
-short PushBullet::update_push(const std::string push_iden, const bool dismissed) {
+short PushBullet::update_push(const std::string push_iden, const bool dismissed)
+{
     std::stringstream data;
     std::string result;
     std::stringstream url_request;
 
-    data << "{"
-         << "\"dismissed\" : " << ((dismissed) ? "true" : "false")
-         << "}";
+    data    << "{"
+            << "\"dismissed\" : " << ((dismissed) ? "true" : "false")
+            << "}";
 
     url_request << API_URL_PUSHES << "/" << push_iden;
+
     if (this->post_request(url_request.str(), &result, data.str()) != 0)
     {
         #ifdef _DEBUG_
@@ -250,6 +252,43 @@ short PushBullet::update_push(const std::string push_iden, const bool dismissed)
 
     std::cout << "Json Document: " << std::endl << json << std::endl;
     #endif
+
+    return 0;
+}
+
+
+
+short PushBullet::delete_push(const std::string push_iden)
+{
+    std::stringstream url_request;
+    std::string result;
+
+    url_request << API_URL_PUSHES << "/" << push_iden;
+
+    if (this->delete_request(url_request.str(), &result) != 0)
+    {
+        #ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to delete the push " << push_iden << "." << std::endl;
+        #endif
+        return -1;
+    }
+
+    return 0;
+}
+
+
+
+short PushBullet::delete_all_pushes(void)
+{
+    std::string result;
+
+    if (this->delete_request(API_URL_PUSHES, &result) != 0)
+    {
+        #ifdef _DEBUG_
+        std::cerr << "POST_REQUEST > Impossible to delete all pushes."  << std::endl;
+        #endif
+        return -1;
+    }
 
     return 0;
 }
