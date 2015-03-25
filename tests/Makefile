@@ -9,6 +9,7 @@ DIR_SRC  = ./src
 DIR_OBJ  = ./obj
 DIR_DEP  = ./dep
 
+CONF_UNCRUSTIFY = ./cpp.cfg
 
 $(shell mkdir -p $(DIR_DEP))
 $(shell mkdir -p $(DIR_OBJ))
@@ -101,3 +102,8 @@ distclean: clean
 
 
 mrproper: distclean
+
+
+# Indent the files
+indent:
+	$(VERBOSE) find $(DIR_SRC) -type f -exec uncrustify -c $(CONF_UNCRUSTIFY) --no-backup --replace {} \;
