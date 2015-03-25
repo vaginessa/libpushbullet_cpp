@@ -132,6 +132,7 @@ short PushBullet::get_request(const std::string url_request, std::string *result
 }
 
 
+
 short PushBullet::delete_request(const std::string url_request, std::string *result)
 {
     /*  Documentation on CURL for C can be found at http://curl.haxx.se/libcurl/c/

@@ -205,8 +205,6 @@ short PushBullet::file(const std::string title, const std::string body, const st
 short PushBullet::list_pushes(void)
 {
     std::string result;
-    std::stringstream conversion;
-    Json::Value json;               // will contain the root value after parsing.
 
     if (this->get_request(API_URL_PUSHES, &result) != 0)
     {
@@ -216,12 +214,10 @@ short PushBullet::list_pushes(void)
         return -1;
     }
 
-    /* Convert the string 'result' to be understand by the Json parser
-     */
-    conversion << result;
-    conversion >> json;
-
     #ifdef _JSON_
+    Json::Value json;
+    std::stringstream(result) >> json;
+
     std::cout << "Json Document: " << std::endl << json["pushes"] << std::endl;
     #endif
 

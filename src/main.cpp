@@ -154,10 +154,7 @@ int main(int argc, char* argv[])
      */
     if (vm.count("note") && vm.count("body") && vm.count("title"))
     {
-        /* Send a note
-         */
         pb.note(title, body);
-
         return EXIT_SUCCESS;
     }
     else if (vm.count("note"))
@@ -170,10 +167,7 @@ int main(int argc, char* argv[])
      */
     if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url"))
     {
-        /* Send a note
-         */
         pb.link(title, body, url);
-
         return EXIT_SUCCESS;
     }
     else if (vm.count("link"))
@@ -207,7 +201,6 @@ int main(int argc, char* argv[])
     if (vm.count("display-devices"))
     {
         pb.display_devices();
-
         return EXIT_SUCCESS;
     }
 
@@ -227,10 +220,7 @@ int main(int argc, char* argv[])
      */
     if (vm.count("file") && vm.count("path-file") && vm.count("body") && vm.count("title"))
     {
-        /*
-         */
         pb.file(title, body, path_file);
-
         return EXIT_SUCCESS;
     }
 
