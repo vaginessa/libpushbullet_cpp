@@ -236,11 +236,7 @@ int main(int argc, char* argv[])
 
     if (vm.count("test"))
     {
-        pb.display_devices();
-        std::cout << pb.get_iden_from_name("All")     << std::endl;
-        std::cout << pb.get_iden_from_name("Firefox") << std::endl;
-        std::cout << pb.get_iden_from_name("BUYSE")   << std::endl;
-        std::cout << pb.get_iden_from_name("test")    << std::endl;
+        pb.list_pushes();
 
         return EXIT_SUCCESS;
     }

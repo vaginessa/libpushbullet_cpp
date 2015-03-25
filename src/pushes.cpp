@@ -41,6 +41,7 @@ short PushBullet::note(const std::string title, const std::string body)
 }
 
 
+
 short PushBullet::note(const std::string title, const std::string body, const std::string iden)
 {
     std::stringstream data;
@@ -74,6 +75,7 @@ short PushBullet::note(const std::string title, const std::string body, const st
 }
 
 
+
 short PushBullet::link(const std::string title, const std::string body, const std::string url)
 {
     std::stringstream data;
@@ -105,6 +107,7 @@ short PushBullet::link(const std::string title, const std::string body, const st
 
     return 0;
 }
+
 
 
 short PushBullet::link(const std::string title, const std::string body, const std::string url, const std::string iden)
@@ -192,6 +195,34 @@ short PushBullet::file(const std::string title, const std::string body, const st
     std::cout << "Data send: "     << std::endl << json << std::endl;
     std::stringstream(result) >> json;
     std::cout << "Response CURL: " << std::endl << json << std::endl;
+    #endif
+
+    return 0;
+}
+
+
+
+short PushBullet::list_pushes(void)
+{
+    std::string result;
+    std::stringstream conversion;
+    Json::Value json;               // will contain the root value after parsing.
+
+    if (this->get_request(API_URL_PUSHES, &result) != 0)
+    {
+        #ifdef _DEBUG_
+        std::cerr << "GET_REQUEST > Impossible to ask for all pushes" << std::endl;
+        #endif
+        return -1;
+    }
+
+    /* Convert the string 'result' to be understand by the Json parser
+     */
+    conversion << result;
+    conversion >> json;
+
+    #ifdef _JSON_
+    std::cout << "Json Document: " << std::endl << json["pushes"] << std::endl;
     #endif
 
     return 0;

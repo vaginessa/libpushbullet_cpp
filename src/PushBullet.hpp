@@ -326,6 +326,14 @@ public:
     short link(const std::string title, const std::string body, const std::string url, const std::string iden);
 
     /**
+     * @brief List all pushes
+     * @details List all the account pushes but does not stock it yet.
+     *
+     * @return Error code
+     */
+    short list_pushes(void);
+
+    /**
      * @brief Make an upload request to the server
      * @details As it is written in the documentation
      *
