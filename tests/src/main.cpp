@@ -18,6 +18,7 @@ BOOST_AUTO_TEST_CASE(test_apikey) {
      */
     PushBullet pb(APIKEY_FALSE);
     PushBullet pb2(APIKEY_TRUE);
+    PushBullet pb3 = pb;
 
     /* Test normal PushBullet Account
      */
@@ -25,6 +26,8 @@ BOOST_AUTO_TEST_CASE(test_apikey) {
     BOOST_CHECK(pb.get_token_key()  == APIKEY_FALSE);
     BOOST_CHECK(pb2.get_token_key() != APIKEY_FALSE);
     BOOST_CHECK(pb2.get_token_key() == APIKEY_TRUE);
+    BOOST_CHECK(pb3.get_token_key() != APIKEY_TRUE);
+    BOOST_CHECK(pb3.get_token_key() == APIKEY_FALSE);
 }
 
 
@@ -50,6 +53,7 @@ BOOST_AUTO_TEST_CASE(test_user_mail) {
     /* Set up a PushBullet account
      */
     PushBullet pb(APIKEY_TRUE);
+
     pb.download_user_informations();
 
     BOOST_CHECK(pb.get_user_email() != USER_EMAIL_FALSE);
@@ -64,6 +68,7 @@ BOOST_AUTO_TEST_CASE(test_user_profile_picture) {
     /* Set up a PushBullet account
      */
     PushBullet pb(APIKEY_TRUE);
+
     pb.download_user_informations();
 
     BOOST_CHECK(pb.get_user_email() != USER_EMAIL_FALSE);
@@ -71,3 +76,28 @@ BOOST_AUTO_TEST_CASE(test_user_profile_picture) {
 }
 
 
+
+#define IDEN_ALL         "ujEIL5AaxhY"
+#define IDEN_BUYSE       "ujEIL5AaxhYsjAorTPTBtY"
+#define IDEN_FIREFOX     "ujEIL5AaxhYsjzWIEVDzOK"
+#define IDEN_LGE_NEXUS_4 "ujEIL5AaxhYsjAiVsKnSTs"
+BOOST_AUTO_TEST_CASE(test_iden_from_name) {
+    /* Set up a PushBullet account
+     */
+    PushBullet pb(APIKEY_TRUE);
+
+    pb.download_user_informations();
+    pb.download_all_devices();
+
+    BOOST_CHECK(pb.get_iden_from_name()              == IDEN_ALL);
+    BOOST_CHECK(pb.get_iden_from_name("")            == IDEN_ALL);
+    BOOST_CHECK(pb.get_iden_from_name("Test")        == IDEN_ALL);
+    BOOST_CHECK(pb.get_iden_from_name("All")         == IDEN_ALL);
+    BOOST_CHECK(pb.get_iden_from_name("all")         == IDEN_ALL);
+    BOOST_CHECK(pb.get_iden_from_name("BUYSE")       == IDEN_BUYSE);
+    BOOST_CHECK(pb.get_iden_from_name("BUYe")        == IDEN_ALL);
+    BOOST_CHECK(pb.get_iden_from_name("Firefox")     == IDEN_FIREFOX);
+    BOOST_CHECK(pb.get_iden_from_name("firefox")     == IDEN_ALL);
+    BOOST_CHECK(pb.get_iden_from_name("LGE Nexus 4") == IDEN_LGE_NEXUS_4);
+    BOOST_CHECK(pb.get_iden_from_name("Lge Nexus 4") == IDEN_ALL);
+}
