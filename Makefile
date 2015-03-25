@@ -2,8 +2,8 @@ CC       = clang++
 LD       = clang++
 
 EXEC       = pb
-LIB_SHARED = libpushbullet.so
-LIB_STATIC = libpushbullet.a
+LIB_SHARED = ./lib/libpushbullet.so
+LIB_STATIC = ./lib/libpushbullet.a
 
 
 DIR_SRC   = ./src
@@ -29,6 +29,7 @@ LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_
 
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp' | sort)
 OBJ      = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
+OBJ_LIB  = $(filter-out $(DIR_OBJ)/main.o, $(OBJ))
 HDR     += $(shell find . -name '*.hpp' -exec dirname {} \;)
 DEP      = $(shell find . -name '*.d')
 
@@ -79,7 +80,7 @@ all: $(EXEC)
 
 
 $(EXEC): $(OBJ)
-	$(VERBOSE) echo [LD] [$(OPTIM)]  $@
+	$(VERBOSE) echo "\t\033[1;35mLD\t$@\033[0m"
 	$(VERBOSE) $(LD) $^ -o $@ $(LDFLAGS)
 
 
@@ -90,16 +91,14 @@ test:
 lib: $(LIB_SHARED) $(LIB_STATIC)
 
 
-$(LIB_SHARED): $(DIR_OBJ)/basics.o $(DIR_OBJ)/contacts.o $(DIR_OBJ)/devices.o $(DIR_OBJ)/pushes.o \
-			   $(DIR_OBJ)/requests.o $(DIR_OBJ)/user.o
-	$(VERBOSE) echo   [SO] [$(OPTIM)]  $@
-	$(VERBOSE) $(LD) -shared -o $(DIR_LIB)/$@ $<  $(LDFLAGS)
+$(LIB_SHARED): $(OBJ_LIB)
+	$(VERBOSE) echo "\t\033[1;35mSO\t$@\033[0m"
+	$(VERBOSE) $(LD) -shared -o $@ $^  $(LDFLAGS)
 
 
-$(LIB_STATIC): $(DIR_OBJ)/basics.o $(DIR_OBJ)/contacts.o $(DIR_OBJ)/devices.o $(DIR_OBJ)/pushes.o \
-			   $(DIR_OBJ)/requests.o $(DIR_OBJ)/user.o
-	$(VERBOSE) echo   [AR] [$(OPTIM)]  $@
-	$(VERBOSE) ar rs $(DIR_LIB)/$@ $< > /dev/null
+$(LIB_STATIC): $(OBJ_LIB)
+	$(VERBOSE) echo "\t\033[1;35mAR\t$@\033[0m"
+	$(VERBOSE) ar rs $@ $^
 
 
 # Include of the makefiles generated in %.o
@@ -110,7 +109,7 @@ $(LIB_STATIC): $(DIR_OBJ)/basics.o $(DIR_OBJ)/contacts.o $(DIR_OBJ)/devices.o $(
 # Create the dependency files in dep/%i
 $(DIR_OBJ)/%.o: %.cpp
 	$(VERBOSE) $(CC) $<  $(CFLAGS) $(INCLUDE_DIR) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
-	$(VERBOSE) echo   [CC] [$(OPTIM)]  $<
+	$(VERBOSE) echo "\t\033[1;32mCXX\t$<\033[0m"
 	$(VERBOSE) $(CC) -c -o $@ $< $(CFLAGS) $(INCLUDE_DIR)
 
 
@@ -119,12 +118,16 @@ clean:
 	$(VERBOSE) find $(DIR_OBJ) -type f -name '*.o' -delete
 
 
+libclean:
+	$(VERBOSE) rm -rf $(DIR_LIB)
+
+
 # distclean : clean all objects files and the executable
 d: distclean
-distclean: clean
+distclean: clean libclean
 	$(VERBOSE) find $(DIR_DEP) -type f -name '*.d' -delete
 	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
-	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP) $(DIR_LIB)
+	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
 	$(VERBOSE) rm -f $(EXEC)
 	$(VERBOSE) $(MAKE) -C $(DIR_TESTS) $@
 
