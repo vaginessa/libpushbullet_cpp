@@ -30,10 +30,8 @@ LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp' | sort)
 OBJ      = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
 OBJ_LIB  = $(filter-out $(DIR_OBJ)/main.o, $(OBJ))
-HDR     += $(shell find . -name '*.hpp' -exec dirname {} \;)
+DIR_HDR  = $(foreach var,$(shell find . -name '*.hpp' -exec dirname {} \; | uniq),-I$(var))
 DEP      = $(shell find . -name '*.d')
-
-INCLUDE_DIR = $(foreach var,$(shell echo $(HDR) | uniq),-I$(var))
 
 
 # Which optimisation?
@@ -108,9 +106,9 @@ $(LIB_STATIC): $(OBJ_LIB)
 # Create every objects files in the same directory of the sources
 # Create the dependency files in dep/%i
 $(DIR_OBJ)/%.o: %.cpp
-	$(VERBOSE) $(CC) $<  $(CFLAGS) $(INCLUDE_DIR) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
+	$(VERBOSE) $(CC) $<  $(CFLAGS) $(DIR_HDR) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
 	$(VERBOSE) echo "\t\033[1;32mCXX\t$<\033[0m"
-	$(VERBOSE) $(CC) -c -o $@ $< $(CFLAGS) $(INCLUDE_DIR)
+	$(VERBOSE) $(CC) -c -o $@ $< $(CFLAGS) $(DIR_HDR)
 
 
 # clean : clean all objects files
