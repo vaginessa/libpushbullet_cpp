@@ -23,8 +23,9 @@ $(shell mkdir -p $(DIR_DOC))
 $(shell mkdir -p $(DIR_LIB))
 
 
-CFLAGS  += -W -Wall -Wextra -Wno-unused-function -fmessage-length=0 -fPIC -std=c++11
-LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lboost_log -lboost_log_setup -lboost_program_options
+CFLAGS  += -W -Wall -Wextra -Wno-unused-function -fmessage-length=0 -fPIC -std=c++11 -DBOOST_LOG_DYN_LINK
+LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lpthread -lboost_log -lboost_thread -lboost_system -lboost_log_setup \
+           -lboost_date_time -lboost_program_options
 
 
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp' | sort)
