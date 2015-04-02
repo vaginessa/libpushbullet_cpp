@@ -153,7 +153,12 @@ int main(int argc, char* argv[])
 
     /* If pushing a note
      */
-    if (vm.count("note") && vm.count("body") && vm.count("title"))
+    if (vm.count("note") && vm.count("body") && vm.count("title") && vm.count("device"))
+    {
+        pb.note(title, body, pb.get_iden_from_name(device));
+        return EXIT_SUCCESS;
+    }
+    else if (vm.count("note") && vm.count("body") && vm.count("title"))
     {
         pb.note(title, body);
         return EXIT_SUCCESS;
@@ -166,7 +171,12 @@ int main(int argc, char* argv[])
 
     /* If pushing a link
      */
-    if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url"))
+    if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url") && vm.count("device"))
+    {
+        pb.link(title, body, url, pb.get_iden_from_name(device));
+        return EXIT_SUCCESS;
+    }
+    else if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url"))
     {
         pb.link(title, body, url);
         return EXIT_SUCCESS;
