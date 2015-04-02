@@ -106,7 +106,8 @@ void PushBullet::display_contacts(void)
 {
     std::pair<std::string, std::string> val;
 
-    std::cout << "Contact: " << std::endl;
+    std::cout << std::endl
+              << "Contacts:" << std::endl;
 
     for (auto& x: this->_contacts)
     {

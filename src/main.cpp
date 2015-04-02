@@ -79,6 +79,7 @@ int main(int argc, char* argv[])
 
         display.add_options()
             ("display-all", "Display user informations and devices informations.")
+            ("display-contacts", "Display user's contacts informations.")
             ("display-devices", "Display devices informations.")
             ("display-infos", "Display user informations.")
         ;
@@ -182,6 +183,7 @@ int main(int argc, char* argv[])
     {
         pb.display_user_informations();
         pb.display_devices();
+        pb.display_contacts();
 
         return EXIT_SUCCESS;
     }
@@ -201,6 +203,14 @@ int main(int argc, char* argv[])
     if (vm.count("display-devices"))
     {
         pb.display_devices();
+        return EXIT_SUCCESS;
+    }
+
+    /* Asking for contacts informations
+     */
+    if (vm.count("display-contacts"))
+    {
+        pb.display_contacts();
         return EXIT_SUCCESS;
     }
 
