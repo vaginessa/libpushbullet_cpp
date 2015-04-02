@@ -47,6 +47,11 @@ short PushBullet::note(const std::string title, const std::string body, const st
     std::stringstream data;
     std::string result;
 
+    // If the user tries to use a empty iden, we send to all the devices.
+    if (iden.empty()) {
+        return this->note(title, body);
+    }
+
     data    << "{"
             << "\"device_iden\":\""  << iden  << "\", "
             << "\"type\":\"note\", "
@@ -114,6 +119,11 @@ short PushBullet::link(const std::string title, const std::string body, const st
 {
     std::stringstream data;
     std::string result;
+
+    // If the user tries to use a empty iden, we send to all the devices.
+    if (iden.empty()) {
+        return this->link(title, body, url);
+    }
 
     data    << "{"
             << "\"device_iden\":\"" << iden  << "\", "
