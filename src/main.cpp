@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
 
         param.add_options()
             ("device,d",
-            boost::program_options::value<std::string>(&device)->default_value("All"),
+            boost::program_options::value<std::string>(&device)->default_value(""),
             "Send to a specific device (designated by its name).")
             ("title,t",
             boost::program_options::value<std::string>(&title),

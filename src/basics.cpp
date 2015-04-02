@@ -92,8 +92,7 @@ void PushBullet::display_token_key(void) const
 void PushBullet::display_devices(void)
 {
     std::cout   << std::endl
-                << "Device: " << std::endl
-                << "    " << this->_all_iden.first << " [" << this->_all_iden.second << "]" << std::endl;
+                << "Device:" << std::endl;
 
     for (auto& x: this->_devices)
     {

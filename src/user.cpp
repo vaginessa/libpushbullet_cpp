@@ -28,10 +28,6 @@ short PushBullet::download_user_informations(void)
     std::cout << "Json Document: " << std::endl << json   << std::endl;
     #endif
 
-    /* Get the identification of the device corresponding to all of them
-     */
-    this->_all_iden = std::make_pair("All", json.get("iden", "null").asString());
-
     /* Get email of the user
      * Get name of the user
      * Get the url of his profile picture

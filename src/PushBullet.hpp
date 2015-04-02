@@ -140,15 +140,6 @@ private:
     std::map<std::string, std::string> _devices;
 
     /**
-     * @brief All devices.
-     * @details This map contains only the identification sequence that can send push notifications to all devices.
-     *
-     * @param n String containing 'All'
-     * @param e Indentification sequence
-     */
-    std::pair<std::string, std::string> _all_iden;
-
-    /**
      * @brief List of contacts of the user.
      *
      * @param n Name of a contact
