@@ -76,7 +76,7 @@ std::string PushBullet::get_iden_from_name(std::string name) const
     }
     else
     {
-        return this->_all_iden.second;
+        return std::string();
     }
 }
 
