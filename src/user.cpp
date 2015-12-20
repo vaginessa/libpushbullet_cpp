@@ -11,31 +11,34 @@
 
 short PushBullet::download_user_informations(void)
 {
-    std::string result;
-    Json::Value json;
+    std::string     result;
+    Json::Value     json;
 
-    if (this->get_request(API_URL_ME, &result) != 0)
+
+    if ( this->get_request(API_URL_ME, &result) != 0 )
     {
-        #ifdef _DEBUG_
+        #ifdef __DEBUG__
         std::cerr << "GET_REQUEST > Impossible to ask for all user informations" << std::endl;
         #endif
-        return -1;
+
+        return (-1);
     }
 
     std::stringstream(result) >> json;
 
     #ifdef _JSON_
-    std::cout << "Json Document: " << std::endl << json   << std::endl;
+    std::cout << "Json Document: " << std::endl << json << std::endl;
     #endif
+
 
     /* Get email of the user
      * Get name of the user
      * Get the url of his profile picture
      *
      */
-    this->_email     = json.get("email", "null").asString();
-    this->_name      = json.get("name", "null").asString();
-    this->_url_photo = json.get("image_url", "null").asString();
+    this->_email        = json.get("email", "null").asString();
+    this->_name         = json.get("name", "null").asString();
+    this->_url_photo    = json.get("image_url", "null").asString();
 
-    return 0;
+    return (0);
 }

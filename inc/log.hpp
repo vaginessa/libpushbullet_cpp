@@ -18,12 +18,12 @@
 #include <boost/log/sources/record_ostream.hpp>
 
 
-namespace logging  = boost::log;
-namespace sinks    = boost::log::sinks;
-namespace src      = boost::log::sources;
-namespace expr     = boost::log::expressions;
-namespace attrs    = boost::log::attributes;
-namespace keywords = boost::log::keywords;
+namespace logging   = boost::log;
+namespace sinks     = boost::log::sinks;
+namespace src       = boost::log::sources;
+namespace expr      = boost::log::expressions;
+namespace attrs     = boost::log::attributes;
+namespace keywords  = boost::log::keywords;
 
 
 
@@ -50,6 +50,7 @@ void init_log(void)
 }
 
 
+
 /**
  * @brief Function to test the log
  * @details [long description]
@@ -60,7 +61,7 @@ void test_log(void)
     logging::add_common_attributes();
 
     using namespace logging::trivial;
-    src::severity_logger< severity_level > lg;
+    src::severity_logger<severity_level>     lg;
 
     BOOST_LOG_SEV(lg, trace) << "A trace severity message";
     BOOST_LOG_SEV(lg, debug) << "A debug severity message";
@@ -69,5 +70,4 @@ void test_log(void)
     BOOST_LOG_SEV(lg, error) << "An error severity message";
     BOOST_LOG_SEV(lg, fatal) << "A fatal severity message";
 }
-
 #endif

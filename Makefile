@@ -1,29 +1,27 @@
-CC       = clang++
-LD       = clang++
+CC       = g++
+LD       = g++
 
-EXEC       = pb
-LIB_SHARED = ./lib/libpushbullet.so
-LIB_STATIC = ./lib/libpushbullet.a
+EXEC      = pushbullet.out
 
-
-DIR_SRC   = ./src
-DIR_OBJ   = ./obj
-DIR_DEP   = ./dep
-DIR_DOC   = ./doxygen
-DIR_LIB   = ./lib
-DIR_TESTS = ./tests
-
-CONF_UNCRUSTIFY = ./cpp.cfg
-
-INSTALL = $(shell which install) -c -m 644
-
-$(shell mkdir -p $(DIR_DEP))
-$(shell mkdir -p $(DIR_OBJ))
-$(shell mkdir -p $(DIR_DOC))
-$(shell mkdir -p $(DIR_LIB))
+DIR_SRC    = ./src
+DIR_INC    = ./inc
+DIR_OBJ    = ./obj
+DIR_LIB    = ./lib
+DIR_OUT    = ./out
+DIR_DEP    = $(DIR_OUT)/dep
+DIR_PREPRO = $(DIR_OUT)/prepro
+DIR_LST    = $(DIR_OUT)/lst
+DIR_TESTS  = ./tests
 
 
-CFLAGS  += -W -Wall -Wextra -Wno-unused-function -fmessage-length=0 -fPIC -std=c++11 -DBOOST_LOG_DYN_LINK
+LIB_SHARED = $(DIR_LIB)/lib$(EXEC:.out=.so)
+LIB_STATIC = $(DIR_LIB)/lib$(EXEC:.out=.a)
+
+
+$(shell mkdir -p $(DIR_SRC))
+
+
+CFLAGS  += -W -Wall -Wextra -Wno-unused-function -fmessage-length=0 -fPIC -std=c++11 -DBOOST_LOG_DYN_LINK -I./$(DIR_INC)
 LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lpthread -lboost_log -lboost_thread -lboost_system -lboost_log_setup \
            -lboost_date_time -lboost_program_options
 
@@ -31,7 +29,6 @@ LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lpthread -lboost_log -lboost_thread -
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp' | sort)
 OBJ      = $(foreach var,$(notdir $(SRC:.cpp=.o)),$(DIR_OBJ)/$(var))
 OBJ_LIB  = $(filter-out $(DIR_OBJ)/main.o, $(OBJ))
-DIR_HDR  = $(foreach var,$(shell find . -name '*.hpp' -exec dirname {} \; | uniq),-I$(var))
 DEP      = $(shell find . -name '*.d')
 
 
@@ -42,16 +39,9 @@ ifeq ($(OPTIM),SIZE)
 else ifeq ($(OPTIM),SPEED)
 	CFLAGS   += -Ofast
 else ifeq ($(OPTIM),DEBUG)
-	CFLAGS   += -g3 -O0 -D_DEBUG_
+	CFLAGS   += -g3 -O1 -D__DEBUG__
 else ifeq ($(OPTIM),NONE)
 	CFLAGS   +=
-endif
-
-
-# Show Json Output ?
-JSON  ?= 0
-ifeq ($(JSON),1)
-	CFLAGS   += -D_JSON_
 endif
 
 
@@ -75,90 +65,84 @@ endif
 vpath %.cpp $(DIR_SRC)
 
 
-all: $(EXEC)
+all: $(EXEC) lib
+
+
+lib: $(LIB_SHARED) $(LIB_STATIC)
 
 
 $(EXEC): $(OBJ)
-	$(VERBOSE) echo "\t\033[1;35mLD\t$@\033[0m"
+	@ echo "\t\033[1;35m[LD]\t[$(OPTIM)]\t$@\033[0m"
 	$(VERBOSE) $(LD) $^ -o $@ $(LDFLAGS)
+
+
+$(LIB_SHARED): $(OBJ_LIB)
+	@ mkdir -p $(DIR_LIB)
+	@ echo "\t\033[1;35m[SO]\t[$(OPTIM)]\t$@\033[0m"
+	$(VERBOSE) $(LD) -shared -o $@ $^  $(LDFLAGS)
+
+
+$(LIB_STATIC): $(OBJ_LIB)
+	@ mkdir -p $(DIR_LIB)
+	@ echo "\t\033[1;35m[AR]\t[$(OPTIM)]\t$@\033[0m"
+	$(VERBOSE) ar crs $@ $^
 
 
 test:
 	$(VERBOSE) $(MAKE) -C $(DIR_TESTS)
 
 
-lib: $(LIB_SHARED) $(LIB_STATIC)
-
-
-$(LIB_SHARED): $(OBJ_LIB)
-	$(VERBOSE) echo "\t\033[1;35mSO\t$@\033[0m"
-	$(VERBOSE) $(LD) -shared -o $@ $^  $(LDFLAGS)
-
-
-$(LIB_STATIC): $(OBJ_LIB)
-	$(VERBOSE) echo "\t\033[1;35mAR\t$@\033[0m"
-	$(VERBOSE) ar rs $@ $^
-
-
-# Include of the makefiles generated in %.o
+# Include of the dependencies generated in %.o
 -include $(DEP)
 
 
 # Create every objects files in the same directory of the sources
 # Create the dependency files in dep/%i
+# .SECONDARY prevents make to delete intermediary files (here object files)
+.SECONDARY: $(OBJ)
 $(DIR_OBJ)/%.o: %.cpp
-	$(VERBOSE) $(CC) $<  $(CFLAGS) $(DIR_HDR) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
-	$(VERBOSE) echo "\t\033[1;32mCXX\t$<\033[0m"
-	$(VERBOSE) $(CC) -c -o $@ $< $(CFLAGS) $(DIR_HDR)
+	@ mkdir -p $(DIR_OBJ) $(DIR_DEP)
+	$(VERBOSE) $(CC) $< $(CFLAGS) -M -MT $@ -MF $(DIR_DEP)/$(notdir $(<:.cpp=.d))
+ifeq ($(PREPRO),1)
+	@ mkdir -p $(DIR_PREPRO)
+	@ echo "\t\033[0;33m[PP]\t[$(OPTIM)]\t$(DIR_PREPRO)/$(notdir $(<:.cpp=.i))\033[0m"
+	$(VERBOSE) $(CC) -E $<  $(CFLAGS) -o $(DIR_PREPRO)/$(notdir $(<:.cpp=.i))
+endif
+ifeq ($(LISTING),1)
+	@ mkdir -p $(DIR_LST)
+	@ echo "\t\033[0;36m[LST]\t[$(OPTIM)]\t$(DIR_LST)/$(notdir $(<:.cpp=.lst))\033[0m"
+	$(VERBOSE) $(CC) -S $<  $(CFLAGS) -o $(DIR_LST)/$(notdir $(<:.cpp=.lst))
+endif
+	@ echo "\t\033[1;32m[CC]\t[$(OPTIM)]\t$<\033[0m"
+	$(VERBOSE) $(CC) -c -fPIC -o $@ $< $(CFLAGS)
 
 
 # clean : clean all objects files
 clean:
-	$(VERBOSE) find $(DIR_OBJ) -type f -name '*.o' -delete
-
-
-libclean:
-	$(VERBOSE) rm -rf $(DIR_LIB)
+	$(VERBOSE) [ ! -d "$(DIR_OBJ)" ] || find $(DIR_OBJ) -type f -name '*.o' -delete
+	$(VERBOSE) [ ! -d "$(DIR_PREPRO)" ] || find $(DIR_PREPRO) -type f -name '*.i' -delete
+	$(VERBOSE) [ ! -d "$(DIR_LST)" ] || find $(DIR_LST) -type f -name '*.lst' -delete
 
 
 # distclean : clean all objects files and the executable
 d: distclean
-distclean: clean libclean
-	$(VERBOSE) find $(DIR_DEP) -type f -name '*.d' -delete
-	$(VERBOSE) rm -rf $(DIR_DOC)/html $(DIR_DOC)/latex
-	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP)
+distclean: clean
+	$(VERBOSE) [ ! -d "$(DIR_DEP)" ] || find $(DIR_DEP) -type f -name '*.d' -delete
+	$(VERBOSE) [ ! -d "$(DIR_LIB)" ] || find $(DIR_LIB) -type f -name '*.so' -delete
+	$(VERBOSE) [ ! -d "$(DIR_LIB)" ] || find $(DIR_LIB) -type f -name '*.a' -delete
+	$(VERBOSE) rm -rf $(DIR_OBJ) $(DIR_DEP) $(DIR_PREPRO) $(DIR_LST) $(DIR_OUT) $(DIR_LIB)
 	$(VERBOSE) rm -f $(EXEC)
-	$(VERBOSE) $(MAKE) -C $(DIR_TESTS) $@
 
 
 mrproper: distclean
 
 
-doxygen: $(SRC) $(HDR)
-	$(VERBOSE) doxygen ./doxygen/Doxyfile
-
-
-doxywizard: $(SRC) $(HDR)
-	$(VERBOSE) doxywizard ./doxygen/Doxyfile
-
-install: lib
-	$(VERBOSE) for hpp in $(HDR)
-	$(VERBOSE) do
-		$(VERBOSE) $(INSTALL) $hpp $(DIR_INSTALL)/include/PushBullet
-	$(VERBOSE) done 
-
-
 # Display the help
 help:
-	$(VERBOSE) echo "Usage :"
-	$(VERBOSE) echo "    $$ make [OPTIONS]"
-	$(VERBOSE) echo ""
-	$(VERBOSE) echo "Options available :"
-	$(VERBOSE) echo "    OPTIM=NONE|DEBUG|SIZE|SPEED   (dft : DEBUG)"
-	$(VERBOSE) echo "    STATIC=0|1                    (dft : 0)"
-	$(VERBOSE) echo "    V=0|1                         (dft : 0)"
-
-
-# Indent the files
-indent:
-	$(VERBOSE) find $(DIR_SRC) -type f -exec uncrustify -c $(CONF_UNCRUSTIFY) --no-backup --replace {} \;
+	@ echo "Usage :"
+	@ echo "    $$ make [OPTIONS]"
+	@ echo ""
+	@ echo "Options available :"
+	@ echo "    OPTIM=NONE|DEBUG|SIZE|SPEED   (dft : DEBUG)"
+	@ echo "    STATIC=0|1                    (dft : 0)"
+	@ echo "    V=0|1                         (dft : 0)"
