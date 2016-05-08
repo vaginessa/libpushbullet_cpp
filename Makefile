@@ -1,5 +1,5 @@
-CC       = clang++
-LD       = clang++
+CC       = g++
+LD       = g++
 
 EXEC      = pushbullet_cpp.out
 
@@ -21,8 +21,9 @@ LIB_STATIC = $(DIR_LIB)/lib$(EXEC:.out=.a)
 $(shell mkdir -p $(DIR_SRC))
 
 
-CFLAGS  += -W -Wall -Wextra -Wno-unused-function -fmessage-length=0 -D_REENTRANT -I $(DIR_INC)
-LDFLAGS += -lpthread
+CFLAGS  += -W -Wall -Wextra -Wno-unused-function -fmessage-length=0 -fPIC -std=c++11 -DBOOST_LOG_DYN_LINK -I./$(DIR_INC)
+LDFLAGS += -lcurl -ljsoncpp -lboost_regex -lpthread -lboost_log -lboost_thread -lboost_system -lboost_log_setup \
+           -lboost_date_time -lboost_program_options
 
 
 SRC      = $(shell find $(DIR_SRC) -name '*.cpp' | sort)

@@ -10,18 +10,22 @@
 #endif
 
 #ifndef PUSHBULLET_INI
+
+
 /**
  * File containing informations about the user account
  */
-    #define PUSHBULLET_INI "./pb.ini"
-#endif // PUSHBULLET_INI
+#define PUSHBULLET_INI "./pb.ini"
+#endif          // PUSHBULLET_INI
 
 #ifndef TOKEN_NODE
+
+
 /**
  * Node that give the user's token from the config file.
  */
-    #define TOKEN_NODE "token.personnal"
-#endif // TOKEN_NODE
+#define TOKEN_NODE "token.personnal"
+#endif          // TOKEN_NODE
 
 
 /**
@@ -31,46 +35,52 @@
  */
 std::string get_token_key_ini(void)
 {
-    boost::property_tree::ptree pt;
+    boost::property_tree::ptree     pt;
 
-    try {
+
+    try
+    {
         boost::property_tree::ini_parser::read_ini(PUSHBULLET_INI, pt);
-        return pt.get<std::string>(TOKEN_NODE);
+
+        return (pt.get<std::string>(TOKEN_NODE) );
     }
-    catch (const std::exception& e) {
+    catch( const std::exception &e )
+    {
         std::cerr   << "TOKENKEY > " << e.what() << std::endl
                     << "TOKENKEY > Using \"00000000000000000000000000000000\"" << std::endl;
-        return "00000000000000000000000000000000";
+
+        return ("00000000000000000000000000000000");
     }
 }
 
 
 
-
-int main(int argc, char* argv[])
+int main(int    argc,
+         char   *argv[]
+         )
 {
-
-    #ifdef _DEBUG_
+    #ifdef __DEBUG__
     std::cout << "Mode:   DEBUG" << std::endl;
     #endif
 
-    boost::program_options::variables_map vm;
-    boost::program_options::options_description visible;
-    boost::program_options::options_description generic("Generic options");
-    boost::program_options::options_description display("Display options");
-    boost::program_options::options_description type("Type of push");
-    boost::program_options::options_description contact("Contact options");
-    boost::program_options::options_description param("Parameters");
-    boost::program_options::options_description test("Testing param");
+    boost::program_options::variables_map           vm;
+    boost::program_options::options_description     visible;
+    boost::program_options::options_description     generic("Generic options");
+    boost::program_options::options_description     display("Display options");
+    boost::program_options::options_description     type("Type of push");
+    boost::program_options::options_description     contact("Contact options");
+    boost::program_options::options_description     param("Parameters");
+    boost::program_options::options_description     test("Testing param");
 
-    std::string device;
-    std::string title;
-    std::string body;
-    std::string url;
-    std::string path_file;
+    std::string     device;
+    std::string     title;
+    std::string     body;
+    std::string     url;
+    std::string     path_file;
 
 
-    try {
+    try
+    {
         /* Add the different options to generic options
          */
         generic.add_options()
@@ -121,20 +131,23 @@ int main(int argc, char* argv[])
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, visible), vm);
         boost::program_options::notify(vm);
     }
-    catch (const std::exception& e) {
+    catch( const std::exception &e )
+    {
         std::cerr << "ERROR > " << e.what() << std::endl;
-        return EXIT_FAILURE;
+
+        return (EXIT_FAILURE);
     }
-    catch (...) {
+    catch( ... )
+    {
         std::cerr << "Exception of unknown type!" << std::endl;
-        return EXIT_FAILURE;
+
+        return (EXIT_FAILURE);
     }
-
-
 
     /* Get the token from file
      */
-    PushBullet pb(get_token_key_ini());
+    PushBullet     pb(get_token_key_ini() );
+
 
     /* Download all infos
      */
@@ -142,118 +155,141 @@ int main(int argc, char* argv[])
     pb.download_user_informations();
     pb.download_contacts();
 
+
     /* Asking for help
      */
-    if (vm.count("help"))
+    if ( vm.count("help") )
     {
         std::cout << "Pushbullet v" << VERSION << std::endl;
         std::cout << visible << std::endl;
-        return EXIT_SUCCESS;
+
+        return (EXIT_SUCCESS);
     }
+
 
     /* If pushing a note
      */
-    if (vm.count("note") && vm.count("body") && vm.count("title") && vm.count("device"))
+    if ( vm.count("note") && vm.count("body") && vm.count("title") && vm.count("device") )
     {
-        pb.note(title, body, pb.get_iden_from_name(device));
-        return EXIT_SUCCESS;
+        pb.note(title, body, pb.get_iden_from_name(device) );
+
+        return (EXIT_SUCCESS);
     }
-    else if (vm.count("note") && vm.count("body") && vm.count("title"))
+    else if ( vm.count("note") && vm.count("body") && vm.count("title") )
     {
         pb.note(title, body);
-        return EXIT_SUCCESS;
+
+        return (EXIT_SUCCESS);
     }
-    else if (vm.count("note"))
+    else if ( vm.count("note") )
     {
         std::cerr << "NOTE > Need a title (-t) and a body (-b)" << std::endl;
-        return EXIT_FAILURE;
+
+        return (EXIT_FAILURE);
     }
+
 
     /* If pushing a link
      */
-    if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url") && vm.count("device"))
+    if ( vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url") && vm.count("device") )
     {
-        pb.link(title, body, url, pb.get_iden_from_name(device));
-        return EXIT_SUCCESS;
+        pb.link(title, body, url, pb.get_iden_from_name(device) );
+
+        return (EXIT_SUCCESS);
     }
-    else if (vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url"))
+    else if ( vm.count("link") && vm.count("body") && vm.count("title") && vm.count("url") )
     {
         pb.link(title, body, url);
-        return EXIT_SUCCESS;
+
+        return (EXIT_SUCCESS);
     }
-    else if (vm.count("link"))
+    else if ( vm.count("link") )
     {
         std::cerr << "LINK > Need a title (-t), a body (-b) and an URL (-u)" << std::endl;
-        return EXIT_FAILURE;
+
+        return (EXIT_FAILURE);
     }
+
 
     /* Asking for all the infos
      */
-    if (vm.count("display-all"))
+    if ( vm.count("display-all") )
     {
         pb.display_user_informations();
         pb.display_devices();
         pb.display_contacts();
 
-        return EXIT_SUCCESS;
+        return (EXIT_SUCCESS);
     }
+
 
     /* Asking for user informations
      */
-    if (vm.count("display-infos"))
+    if ( vm.count("display-infos") )
     {
         pb.download_user_informations();
         pb.display_user_informations();
 
-        return EXIT_SUCCESS;
+        return (EXIT_SUCCESS);
     }
+
 
     /* Asking for devices informations
      */
-    if (vm.count("display-devices"))
+    if ( vm.count("display-devices") )
     {
         pb.display_devices();
-        return EXIT_SUCCESS;
+
+        return (EXIT_SUCCESS);
     }
+
 
     /* Asking for contacts informations
      */
-    if (vm.count("display-contacts"))
+    if ( vm.count("display-contacts") )
     {
         pb.display_contacts();
-        return EXIT_SUCCESS;
+
+        return (EXIT_SUCCESS);
     }
+
 
     /* Contact
      */
-    if (vm.count("contact"))
+    if ( vm.count("contact") )
     {
         pb.display_contacts();
         pb.update_contact("Henri Buyse Pro", "Henri Buyse Pro");
         pb.display_contacts();
+
+
         // pb.delete_contact("Henri Buyse Pro");
 
-        return EXIT_SUCCESS;
+        return (EXIT_SUCCESS);
     }
+
 
     /* File
      */
-    if (vm.count("file") && vm.count("path-file") && vm.count("body") && vm.count("title"))
+    if ( vm.count("file") && vm.count("path-file") && vm.count("body") && vm.count("title") )
     {
         pb.file(title, body, path_file);
-        return EXIT_SUCCESS;
+
+        return (EXIT_SUCCESS);
     }
 
-    if (vm.count("test"))
+    if ( vm.count("test") )
     {
         pb.delete_push("ujEIL5AaxhYsjAiPmY7Kj6");
 
-        return EXIT_SUCCESS;
+        return (EXIT_SUCCESS);
     }
+
 
     /* If no options are given, we display the help
      */
     std::cout << "Pushbullet v" << VERSION << std::endl;
     std::cout << visible << std::endl;
-    return EXIT_SUCCESS;
+
+    return (EXIT_SUCCESS);
 }

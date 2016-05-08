@@ -11,102 +11,114 @@
 
 short PushBullet::download_contacts(void)
 {
-    std::string result;
-    Json::Value json;
+    std::string     result;
+    Json::Value     json;
+
 
     /* Free the device map
      */
 
     this->_contacts.clear();
 
-    if (this->get_request(API_URL_CONTACTS, &result) != 0)
+    if ( this->get_request(API_URL_CONTACTS, &result) != 0 )
     {
-        #ifdef _DEBUG_
+        #ifdef __DEBUG__
         std::cerr << "GET_REQUEST > Impossible to ask for the user's contacts" << std::endl;
         #endif
-        return -1;
+
+        return (-1);
     }
 
     std::stringstream(result) >> json;
 
     #ifdef _JSON_
-    std::cout << "Json Document: " << std::endl << json   << std::endl;
+    std::cout << "Json Document: " << std::endl << json << std::endl;
     #endif
+
 
     /* Get the list of devices
      */
-    const Json::Value contacts = json["contacts"];
+    const Json::Value     contacts = json["contacts"];
 
-    for (int index = 0; index < (int) contacts.size(); ++index)
+    for ( int index = 0; index < (int) contacts.size(); ++index )
     {
         /* Check if the device is still active
          * If it is, we add it in the list of devices.
          */
-        if (contacts[index].get("active", false).asBool())
+        if ( contacts[index].get("active", false).asBool() )
         {
             this->_contacts.insert(std::make_pair(contacts[index].get("name", "null").asString(),
                                                   std::make_pair(contacts[index].get("email", "null").asString(),
-                                                                 contacts[index].get("iden", "null").asString())));
+                                                                 contacts[index].get("iden", "null").asString() ) ) );
         }
     }
 
-    return 0;
+    return (0);
 }
 
 
 
-short PushBullet::create_contact(const std::string name, const std::string email)
+short PushBullet::create_contact(const std::string  name,
+                                 const std::string  email
+                                 )
 {
-    std::stringstream data;
-    std::string result;
+    std::stringstream       data;
+    std::string             result;
+
 
     data    << "{"
-            << "\"name\" : \""  << name  << "\", "
+            << "\"name\" : \"" << name << "\", "
             << "\"email\" : \"" << email << "\""
             << "}";
 
-    if (this->post_request(API_URL_CONTACTS, &result, data.str()) != 0)
+    if ( this->post_request(API_URL_CONTACTS, &result, data.str() ) != 0 )
     {
-        #ifdef _DEBUG_
+        #ifdef __DEBUG__
         std::cerr << "POST_REQUEST > Impossible to add the contact" << name << std::endl;
         #endif
-        return -1;
+
+        return (-1);
     }
 
-    #ifdef _DEBUG_
-    Json::Value json;
+    #ifdef __DEBUG__
+    Json::Value     json;
 
     data >> json;
-    std::cout << "Data send: "     << std::endl << json << std::endl;
+    std::cout << "Data send: " << std::endl << json << std::endl;
     std::stringstream(result) >> json;
     std::cout << "Response CURL: " << std::endl << json << std::endl;
     #endif
 
     this->download_contacts();
 
-    return 0;
+    return (0);
 }
 
 
 
-short PushBullet::update_contact(const std::string old_name, const std::string new_name)
+short PushBullet::update_contact(const std::string  old_name,
+                                 const std::string  new_name
+                                 )
 {
-    std::stringstream data;
-    std::stringstream request_url;
-    std::string result;
-    std::string iden;
+    std::stringstream       data;
+    std::stringstream       request_url;
+    std::string             result;
+    std::string             iden;
+
 
     data    << "{"
-            << "\"name\" : \""  << new_name  << "\""
+            << "\"name\" : \"" << new_name << "\""
             << "}";
 
-    if (!this->_contacts.count(old_name))
+    if ( ! this->_contacts.count(old_name) )
     {
-        #ifdef _DEBUG_
+        #ifdef __DEBUG__
         std::cerr << "SELECT_CONTACT > No contact is named \"" << old_name << "\"." << std::endl;
         #endif
-        return -1;
+
+        return (-1);
     }
+
 
     /* Get the identification number from the _contacts map.
      */
@@ -114,36 +126,42 @@ short PushBullet::update_contact(const std::string old_name, const std::string n
 
     request_url << API_URL_CONTACTS << "/" << iden;
 
-    if (this->post_request(request_url.str(), &result, data.str()) != 0)
+    if ( this->post_request(request_url.str(), &result, data.str() ) != 0 )
     {
-        #ifdef _DEBUG_
+        #ifdef __DEBUG__
         std::cerr   << "DELETE_CONTACT > Impossible to update the contact \"" << old_name << "\" to \""
                     << new_name << "\"." << std::endl;
         #endif
-        return -2;
+
+        return (-2);
     }
+
 
     /* Refresh the list of devices
      */
     this->download_contacts();
-    return 0;
+
+    return (0);
 }
 
 
 
 short PushBullet::delete_contact(const std::string name)
 {
-    std::stringstream request_url;
-    std::string result;
-    std::string iden;
+    std::stringstream       request_url;
+    std::string             result;
+    std::string             iden;
 
-    if (!this->_contacts.count(name))
+
+    if ( ! this->_contacts.count(name) )
     {
-        #ifdef _DEBUG_
+        #ifdef __DEBUG__
         std::cerr << "SELECT_CONTACT > No contact is named \"" << name << "\"." << std::endl;
         #endif
-        return -1;
+
+        return (-1);
     }
+
 
     /* Get the identification number from the _contacts map.
      */
@@ -152,16 +170,19 @@ short PushBullet::delete_contact(const std::string name)
 
     request_url << API_URL_CONTACTS << "/" << iden;
 
-    if (this->delete_request(request_url.str(), &result) != 0)
+    if ( this->delete_request(request_url.str(), &result) != 0 )
     {
-        #ifdef _DEBUG_
+        #ifdef __DEBUG__
         std::cerr << "DELETE_CONTACT > Impossible to delete the contact \"" << name << "\"." << std::endl;
         #endif
-        return -2;
+
+        return (-2);
     }
+
 
     /* Refresh the list of devices
      */
     this->download_contacts();
-    return 0;
+
+    return (0);
 }
